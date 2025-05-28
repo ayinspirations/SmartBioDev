@@ -165,6 +165,15 @@ function saveTileFromPopup() {
   const popup = document.getElementById('tilePopup');
   if (!popup) return;
 
+  // EventListener für Popup Buttons (einmal beim Laden)
+window.addEventListener('load', () => {
+  const saveBtn = document.getElementById('saveTileBtn');
+  const cancelBtn = document.getElementById('cancelTileBtn');
+
+  if (saveBtn) saveBtn.addEventListener('click', saveTileFromPopup);
+  if (cancelBtn) cancelBtn.addEventListener('click', closeTilePopup);
+});
+
   const type = popup.dataset.type;
   const link = document.getElementById('tileLinkInput').value.trim();
   const text = document.getElementById('tileTextInput').value.trim();
