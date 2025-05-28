@@ -381,50 +381,73 @@ window.onload = () => {
   }
 
   // Login-Link toggle zwischen Registrierung und Login
-  const toggleLoginLink = document.getElementById('toggleLoginLink');
-  if (toggleLoginLink) {
-    toggleLoginLink.onclick = () => {
-      const formTitle = document.getElementById('formTitle');
-      const registerBtn = document.getElementById('registerBtn');
+const toggleLoginLink = document.getElementById('toggleLoginLink');
+if (toggleLoginLink) {
+  toggleLoginLink.onclick = () => {
+    const formTitle = document.getElementById('formTitle');
+    const registerBtn = document.getElementById('registerBtn');
+    const authMessage = document.getElementById('authMessage');
+    
+    // Formular zurücksetzen und Meldung entfernen
+    document.getElementById('authForm').reset();
+    if(authMessage) authMessage.textContent = '';
 
-      if (formTitle.textContent === 'Registrieren') {
-        formTitle.textContent = 'Einloggen';
-        registerBtn.textContent = 'Einloggen';
-      } else {
-        formTitle.textContent = 'Registrieren';
-        registerBtn.textContent = 'Registrieren & SmartBio erstellen';
-      }
-    };
-  }
+    if (formTitle.textContent === 'Registrieren') {
+      formTitle.textContent = 'Einloggen';
+      registerBtn.textContent = 'Einloggen';
+    } else {
+      formTitle.textContent = 'Registrieren';
+      registerBtn.textContent = 'Registrieren & SmartBio erstellen';
+    }
+  };
+}
 
-  // Login/Register Button je nach Modus
-  const authForm = document.getElementById('authForm');
-  if (authForm) {
-    authForm.onsubmit = async () => {
-      const formTitle = document.getElementById('formTitle').textContent;
-      const email = document.getElementById('emailInput').value.trim();
-      const password = document.getElementById('passwordInput').value.trim();
+// Login/Register Button je nach Modus
+const authForm = document.getElementById('authForm');
+if (authForm) {
+  authForm.onsubmit = async (event) => {
+    event.preventDefault();  // Formular-Submit verhindern
 
-      if (!email || !password || password.length < 6) {
-        showToast('Bitte gültige E-Mail und Passwort (mindestens 6 Zeichen) eingeben.', 'error');
-        return false;
-      }
+    const formTitle = document.getElementById('formTitle').textContent;
+    const email = document.getElementById('emailInput').value.trim();
+    const password = document.getElementById('passwordInput').value.trim();
+    const registerBtn = document.getElementById('registerBtn');
 
-      try {
-        if (formTitle === 'Registrieren') {
-          await auth.createUserWithEmailAndPassword(email, password);
-          showToast('Registrierung erfolgreich! Du bist jetzt eingeloggt.', 'success');
-        } else {
-          await auth.signInWithEmailAndPassword(email, password);
-          showToast('Login erfolgreich!', 'success');
-        }
-        authForm.reset();
-      } catch (error) {
-        showToast('Fehler: ' + error.message, 'error');
-      }
+    if (!email || !password || password.length < 6) {
+      showToast('Bitte gültige E-Mail und Passwort (mindestens 6 Zeichen) eingeben.', 'error');
       return false;
-    };
-  }
+    }
+
+    // Button kurz deaktivieren um Doppelklick zu verhindern
+    registerBtn.disabled = true;
+
+    try {
+      if (formTitle === 'Registrieren') {
+        await auth.createUserWithEmailAndPassword(email, password);
+        showToast('Registrierung erfolgreich! Du bist jetzt eingeloggt.', 'success');
+      } else {
+        await auth.signInWithEmailAndPassword(email, password);
+        showToast('Login erfolgreich!', 'success');
+      }
+      authForm.reset();
+    } catch (error) {
+      // Optional: Fehler etwas benutzerfreundlicher anzeigen
+      let msg = error.message;
+      if (error.code === 'auth/email-already-in-use') {
+        msg = 'Diese E-Mail wird bereits verwendet. Bitte einloggen.';
+      } else if (error.code === 'auth/wrong-password') {
+        msg = 'Falsches Passwort. Bitte erneut versuchen.';
+      } else if (error.code === 'auth/user-not-found') {
+        msg = 'Kein Nutzer mit dieser E-Mail gefunden.';
+      }
+      showToast('Fehler: ' + msg, 'error');
+    } finally {
+      registerBtn.disabled = false;
+    }
+    return false;
+  };
+}
+
 
   // Kachel-Optionen Buttons verbinden
   document.querySelectorAll('#kachelOptionen button').forEach(btn => {
