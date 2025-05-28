@@ -16,15 +16,95 @@
       background-color: white;
       cursor: pointer;
     }
+
+    /* Boho Style Login Form */
+    #loginContainer {
+      max-width: 420px;
+      margin: 5rem auto;
+      padding: 2rem 1.5rem;
+      background: linear-gradient(to bottom, var(--accent) 0%, #fdf2e9 50%, #ffffff 100%);
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      font-family: 'Segoe UI', sans-serif;
+      color: var(--primary);
+      text-align: center;
+    }
+
+    #loginContainer h2 {
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      color: var(--primary);
+    }
+
+    #loginContainer label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      text-align: left;
+      font-size: 1rem;
+      color: var(--primary);
+    }
+
+    #loginContainer input {
+      width: 100%;
+      padding: 0.5rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--accent);
+      margin-bottom: 1rem;
+      box-sizing: border-box;
+    }
+
+    #loginContainer button {
+      background-color: var(--cta);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+
+    #loginContainer button:hover {
+      background-color: var(--primary);
+    }
+
+    #loginContainer .toggle-login {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: var(--primary);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    #loginContainer .toggle-login:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
 <body class="theme-default" style="position:relative;">
 
   <!-- LOGIN CONTAINER -->
-  <div id="loginContainer" style="text-align:center; padding:2rem;">
-    <h2>Registrierung</h2>
-    <input id="inputName" placeholder="Dein Name" style="padding:0.5rem; font-size:1rem;" />
-    <button id="registerBtn" style="padding:0.5rem 1rem; margin-top:1rem; cursor:pointer;">Registrieren & SmartBio erstellen</button>
+  <div id="loginContainer">
+    <h2 id="formTitle">Registrieren</h2>
+    <form id="authForm" autocomplete="off" onsubmit="return false;">
+      <label for="emailInput">E-Mail</label>
+      <input type="email" id="emailInput" placeholder="Deine E-Mail" required />
+      <label for="passwordInput">Passwort</label>
+      <input type="password" id="passwordInput" placeholder="Mindestens 6 Zeichen" minlength="6" required />
+      <button id="authSubmitBtn">Registrieren & SmartBio erstellen</button>
+    </form>
+    <div class="toggle-login" id="toggleLoginText">Schon registriert? <span id="toggleLoginLink" style="color: var(--cta);">Hier einloggen</span></div>
+    <div id="authMessage" style="margin-top:1rem; color: red;"></div>
   </div>
 
   <!-- CONTENT CONTAINER -->

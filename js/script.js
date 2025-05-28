@@ -1,77 +1,36 @@
-let isLoggedIn = false; // Start: nicht eingeloggt
-let isEditing = false;
-let userName = null;
-
-// Sobald die Seite geladen ist
-window.onload = () => {
-  // Prüfe Login-Status im localStorage
-  userName = localStorage.getItem('userName');
-  isLoggedIn = !!userName;
-
-  if (!isLoggedIn) {
-    // Login anzeigen, Content verstecken
-    document.getElementById('loginContainer').style.display = 'block';
-    document.getElementById('contentContainer').style.display = 'none';
-  } else {
-    // Content anzeigen, Login verstecken
-    document.getElementById('loginContainer').style.display = 'none';
-    document.getElementById('contentContainer').style.display = 'block';
-    updateUsernameInHeader();
-    showEditButton();
-  }
-
-  // Registrierungs-Button Handler
-  const registerBtn = document.getElementById('registerBtn');
-  if (registerBtn) {
-    registerBtn.onclick = () => {
-      const inputName = document.getElementById('inputName').value.trim();
-      if (!inputName) {
-        alert('Bitte gib einen Namen ein!');
-        return;
-      }
-      userName = inputName;
-      localStorage.setItem('userName', userName);
-      isLoggedIn = true;
-      // UI umschalten
-      document.getElementById('loginContainer').style.display = 'none';
-      document.getElementById('contentContainer').style.display = 'block';
-      updateUsernameInHeader();
-      showEditButton();
-    };
-  }
-
-  // Kachel-Optionen Buttons verbinden (dein Original)
-  document.querySelectorAll('#kachelOptionen button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const type = btn.textContent.includes('Quadratisch') ? 'square' : (btn.textContent.includes('halbe') ? 'half' : 'full');
-      addTile(type);
-    });
-  });
-
-  // Theme-Dropdown Event (dein Original)
-  const themeDropdown = document.getElementById('themeDropdown');
-  if (themeDropdown) {
-    themeDropdown.addEventListener('change', function () {
-      wechselTheme(this.value);
-    });
-  }
+// ---------------- Firebase Config: ERSETZE DIESE Werte mit deinen Firebase Projekt-Daten ----------------
+const firebaseConfig = {
+  apiKey: "AIzaSyBCTa_qffHHhvauBdJQVyTlMhMmmbN3rag",
+  authDomain: "smartbio-app.firebaseapp.com",
+  projectId: "smartbio-app",
+  storageBucket: "smartbio-app.firebasestorage.app",
+  messagingSenderId: "778331841333",
+  appId: "1:778331841333:web:4865dc2f0575a7b19c627c"
 };
 
-// Helfer: Username im Header aktualisieren
-function updateUsernameInHeader() {
+// Firebase initialisieren (compat Version)
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
+// ------------------------------------------------------
+
+let isEditing = false;
+
+// Helfer, um Username im Header zu setzen
+function updateUsernameInHeader(name) {
   const headerUsername = document.getElementById('headerUsername');
-  if (headerUsername && userName) {
-    headerUsername.textContent = userName;
+  if (headerUsername && name) {
+    headerUsername.textContent = name;
   }
 }
 
-// Bearbeiten-Button anzeigen (dein Original unverändert)
+// Zeigt Bearbeiten Button falls noch nicht da
 function showEditButton() {
   const header = document.querySelector('.header');
-  if (header.querySelector('#editModeBtn')) return; // Button existiert schon, nicht erneut hinzufügen
+  if (header.querySelector('#editModeBtn')) return;
 
   const editBtn = document.createElement('button');
-  editBtn.id = 'editModeBtn'; // eindeutige ID für spätere Referenz
+  editBtn.id = 'editModeBtn';
   editBtn.textContent = 'Bearbeiten';
   editBtn.style.marginTop = '1rem';
   editBtn.style.padding = '0.5rem 1rem';
@@ -84,17 +43,15 @@ function showEditButton() {
   header.appendChild(editBtn);
 }
 
-// Bearbeitungsmodus umschalten (dein Original unverändert)
+// Umschalten Bearbeitungsmodus (deine bestehende Logik)
 function toggleEditMode() {
   isEditing = !isEditing;
 
-  // Toggle ThemeSelector Dropdown
   const themeSelector = document.getElementById('themeSelector');
   if (themeSelector) {
     themeSelector.style.display = isEditing ? 'block' : 'none';
   }
 
-  // Tiles editieren / entfernen aktivieren
   document.querySelectorAll('.tile').forEach(tile => {
     if (tile.classList.contains('add-tile')) return;
 
@@ -110,7 +67,7 @@ function toggleEditMode() {
       removeBtn.onclick = () => tile.remove();
       tile.style.position = 'relative';
       tile.appendChild(removeBtn);
-      tile.contentEditable = true; // Optional: Inhalte direkt editierbar
+      tile.contentEditable = true;
     } else {
       const existing = tile.querySelector('.remove-btn');
       if (existing) existing.remove();
@@ -118,20 +75,18 @@ function toggleEditMode() {
     }
   });
 
-  // Kachel-Optionen Buttons anzeigen/verstecken
   const kachelOptionen = document.getElementById('kachelOptionen');
   if (kachelOptionen) {
     kachelOptionen.style.display = isEditing ? 'flex' : 'none';
   }
 
-  // Button-Text anpassen
   const editBtn = document.getElementById('editModeBtn');
   if (editBtn) {
     editBtn.textContent = isEditing ? 'Bearbeiten beenden' : 'Bearbeiten';
   }
 }
 
-// Neue Kachel hinzufügen (dein Original unverändert)
+// Kacheln hinzufügen (dein bestehender Code)
 function addTile(type) {
   const tiles = document.querySelector('.tiles');
   const newTile = document.createElement('div');
@@ -161,16 +116,70 @@ function addTile(type) {
     row.appendChild(newTile);
     tiles.insertBefore(row, document.getElementById('kachelOptionen'));
   } else {
-    // full-width
     newTile.innerHTML = prompt('Text für die Kachel:') || 'Neue Kachel (volle Breite)';
     tiles.insertBefore(newTile, document.getElementById('kachelOptionen'));
   }
 }
 
-// Theme-Wechsel Funktion (dein Original unverändert)
+// Theme-Wechsel Funktion (dein Original)
 function wechselTheme(name) {
   const link = document.getElementById('themeStylesheet');
   if (link) {
     link.href = `themes/theme-${name}.css`;
   }
 }
+
+// --- START ---
+
+window.onload = () => {
+  // Firebase Auth Status beobachten
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      // User eingeloggt → UI anpassen
+      document.getElementById('loginContainer').style.display = 'none';
+      document.getElementById('contentContainer').style.display = 'block';
+      updateUsernameInHeader(user.email || user.displayName || "User");
+      showEditButton();
+    } else {
+      // Kein User → Login zeigen, Content verstecken
+      document.getElementById('loginContainer').style.display = 'block';
+      document.getElementById('contentContainer').style.display = 'none';
+    }
+  });
+
+  // Registrierungs-Button jetzt mit Eingabe-Feldern (nicht prompt)
+  const registerBtn = document.getElementById('registerBtn');
+  if (registerBtn) {
+    registerBtn.onclick = async () => {
+      const email = document.getElementById('emailInput').value.trim();
+      const password = document.getElementById('passwordInput').value.trim();
+      if (!email || !password || password.length < 6) {
+        alert('Bitte gültige E-Mail und Passwort (mindestens 6 Zeichen) eingeben.');
+        return;
+      }
+      try {
+        await auth.createUserWithEmailAndPassword(email, password);
+        alert('Registrierung erfolgreich! Du bist jetzt eingeloggt.');
+        document.getElementById('authForm').reset();
+      } catch (error) {
+        alert('Fehler bei Registrierung: ' + error.message);
+      }
+    };
+  }
+
+  // Kachel-Optionen Buttons verbinden (dein Original)
+  document.querySelectorAll('#kachelOptionen button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const type = btn.textContent.includes('Quadratisch') ? 'square' : (btn.textContent.includes('halbe') ? 'half' : 'full');
+      addTile(type);
+    });
+  });
+
+  // Theme-Dropdown Event (dein Original)
+  const themeDropdown = document.getElementById('themeDropdown');
+  if (themeDropdown) {
+    themeDropdown.addEventListener('change', function () {
+      wechselTheme(this.value);
+    });
+  }
+};
