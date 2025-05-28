@@ -109,12 +109,22 @@ header h1 {
 }
 
 /* Bearbeiten Button oben rechts */
+/* Button außerhalb Header, oben rechts vom Container */
 #editModeBtn {
-  position: absolute;
+  position: absolute; /* oder fixed */
   top: 1rem;
-  right: 1.5rem;
-  z-index: 1100;
+  right: 1rem;
+  background: #e6735f;
+  color: white;
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  z-index: 2000;
+  transition: background-color 0.3s ease;
 }
+
 
 #editModeBtn:hover {
   background-color: #cc5a49;
