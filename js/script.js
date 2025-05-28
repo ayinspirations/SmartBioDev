@@ -31,17 +31,19 @@ function showEditButton() {
   if (header.querySelector('#editModeBtn')) return;
 
   const editBtn = document.createElement('button');
-  editBtn.id = 'editModeBtn';
-  editBtn.textContent = 'Bearbeiten';
-  editBtn.style.marginTop = '1rem';
-  editBtn.style.padding = '0.5rem 1rem';
-  editBtn.style.background = '#e6735f';
-  editBtn.style.color = '#fff';
-  editBtn.style.border = 'none';
-  editBtn.style.borderRadius = '8px';
-  editBtn.style.cursor = 'pointer';
-  editBtn.onclick = toggleEditMode;
-  header.appendChild(editBtn);
+editBtn.id = 'editModeBtn';
+editBtn.textContent = 'Bearbeiten';
+// Entferne marginTop, position, top, right aus Inline-Stil
+// Nur noch grundlegende Styles für Padding, Farben etc.
+editBtn.style.padding = '0.5rem 1rem';
+editBtn.style.background = '#e6735f';
+editBtn.style.color = '#fff';
+editBtn.style.border = 'none';
+editBtn.style.borderRadius = '8px';
+editBtn.style.cursor = 'pointer';
+editBtn.onclick = toggleEditMode;
+header.appendChild(editBtn);
+
 }
 
 // Umschalten Bearbeitungsmodus
@@ -288,7 +290,7 @@ function setupLogoutButton() {
     logoutBtn.style.background = '#e6735f';
     logoutBtn.style.color = '#fff';
     logoutBtn.style.cursor = 'pointer';
-    logoutBtn.style.zIndex = '10000';
+    logoutBtn.style.zIndex = '11000';
     document.body.appendChild(logoutBtn);
 
     logoutBtn.onclick = async () => {

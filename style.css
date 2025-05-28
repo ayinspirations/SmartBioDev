@@ -36,11 +36,14 @@ html, body {
 
 /* Neuer Header als Spalte mit zentriertem Profilbild */
 .header {
-  display: flex;
-  flex-direction: column;    /* untereinander */
-  align-items: center;       /* zentriert */
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  background: var(--soft);
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  z-index: 1000;
+  text-align: center;
+  font-family: 'Segoe UI', sans-serif;
 }
 
 .header h1 {
