@@ -148,24 +148,25 @@ window.onload = () => {
   });
 
   // Registrierungs-Button jetzt mit Eingabe-Feldern (nicht prompt)
-  const registerBtn = document.getElementById('registerBtn');
-  if (registerBtn) {
-    registerBtn.onclick = async () => {
-      const email = document.getElementById('emailInput').value.trim();
-      const password = document.getElementById('passwordInput').value.trim();
-      if (!email || !password || password.length < 6) {
-        alert('Bitte gültige E-Mail und Passwort (mindestens 6 Zeichen) eingeben.');
-        return;
-      }
-      try {
-        await auth.createUserWithEmailAndPassword(email, password);
-        alert('Registrierung erfolgreich! Du bist jetzt eingeloggt.');
-        document.getElementById('authForm').reset();
-      } catch (error) {
-        alert('Fehler bei Registrierung: ' + error.message);
-      }
-    };
-  }
+const registerBtn = document.getElementById('registerBtn');
+if (registerBtn) {
+  registerBtn.onclick = async () => {
+    const email = document.getElementById('emailInput').value.trim();
+    const password = document.getElementById('passwordInput').value.trim();
+    if (!email || !password || password.length < 6) {
+      alert('Bitte gültige E-Mail und Passwort (mindestens 6 Zeichen) eingeben.');
+      return;
+    }
+    try {
+      await auth.createUserWithEmailAndPassword(email, password);
+      alert('Registrierung erfolgreich! Du bist jetzt eingeloggt.');
+      document.getElementById('authForm').reset();
+    } catch (error) {
+      alert('Fehler bei Registrierung: ' + error.message);
+    }
+  };
+}
+
 
   // Kachel-Optionen Buttons verbinden (dein Original)
   document.querySelectorAll('#kachelOptionen button').forEach(btn => {
