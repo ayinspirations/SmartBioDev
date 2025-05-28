@@ -29,11 +29,7 @@ html, body {
   box-sizing: border-box;
 }
 
-/* Alte Header-Pseudoelemente entfernen */
-.header h1::before,
-.header h1::after {
-  content: none !important;
-}
+
 
 header {
   display: block; /* Standard sichtbar */
@@ -53,24 +49,14 @@ header h1 {
 .header {
   position: relative; /* nicht fixiert */
   background: transparent;
-  padding: 1rem 0;
-  padding-right: 6rem;
+  padding: 1rem 1.5rem 2rem 1.5rem; /* genug Platz rechts für den Button */
   text-align: center;
   font-family: 'Segoe UI', sans-serif;
   box-shadow: none;
   z-index: auto;
-}
-
-.header h1 {
-  display: inline-flex;           /* alles in einer Zeile */
-  align-items: center;
-  justify-content: center;        /* Zentriert Inhalt */
-  gap: 0.5rem;
-  margin: 0 auto;
-  font-size: 2rem;
-  font-weight: 600;
-  color: var(--primary);
-  user-select: none;
+  max-width: 420px; /* Containerbreite anpassen */
+  margin: 0 auto;   /* zentrieren */
+  box-sizing: border-box;
 }
 
 .header-collab {
@@ -85,13 +71,66 @@ header h1 {
   vertical-align: middle;
 }
 
+.header {
+  position: relative; /* nicht fixiert */
+  background: transparent;
+  padding: 1rem 1.5rem 2rem 1.5rem; /* genug Platz rechts für den Button */
+  text-align: center;
+  font-family: 'Segoe UI', sans-serif;
+  box-shadow: none;
+  z-index: auto;
+  max-width: 420px; /* Containerbreite anpassen */
+  margin: 0 auto;   /* zentrieren */
+  box-sizing: border-box;
+}
+
+/* Bearbeiten Button oben rechts absolut positionieren im Header */
+#editModeBtn {
+  position: absolute;
+  top: 1rem;        /* ganz oben mit Abstand */
+  right: 1.5rem;    /* rechts mit Padding gleich Container */
+  padding: 0.4rem 1rem;
+  background: #e6735f;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  z-index: 1100;
+}
+
+/* Header Überschrift */
+.header h1 {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0 auto;
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--primary);
+  user-select: none;
+  max-width: calc(100% - 150px); /* Platz lassen für den Button rechts */
+  white-space: nowrap; /* Keine Zeilenumbrüche im Header */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Überlauf mit ... anzeigen */
+}
+
+/* Username kleiner und nicht außerhalb */
 .header-username {
-  font-weight: 300;    /* dünner */
-  font-size: 1.8rem;
+  font-weight: 300;
+  font-size: 1.6rem;
   color: #6e5d4d;
-  user-select: text;   /* editierbar wenn aktiviert */
-  outline: none;       /* keine Umrandung beim editieren */
+  font-family: 'Segoe UI', sans-serif;
+  user-select: text;
+  outline: none;
   cursor: text;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
   margin-left: 0.25rem;
 }
 
@@ -107,11 +146,11 @@ header h1 {
   display: block;
 }
 
-/* Bearbeiten Button rechts oben */
+/* Bearbeiten Button oben rechts absolut positionieren im Header */
 #editModeBtn {
   position: absolute;
-  top: 0.1rem;   /* leicht nach oben verschieben */
-  right: 0.5rem; /* rechtsbündig mit etwas Abstand */
+  top: 1rem;        /* ganz oben mit Abstand */
+  right: 1.5rem;    /* rechts mit Padding gleich Container */
   padding: 0.4rem 1rem;
   background: #e6735f;
   color: white;
@@ -462,19 +501,23 @@ body.theme-mint {
     box-shadow: none;
   }
 
-  /* Header flex auf block ändern, damit alles untereinander */
-  .header h1 {
-    flex-direction: column;
-    font-size: 1.4rem;
-    gap: 0.2rem;
-    justify-content: center;
-  }
+  /* Header Überschrift */
+.header h1 {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0 auto;
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--primary);
+  user-select: none;
+  max-width: calc(100% - 150px); /* Platz lassen für den Button rechts */
+  white-space: nowrap; /* Keine Zeilenumbrüche im Header */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Überlauf mit ... anzeigen */
+}
 
-  /* Username unter SmartBio, zentriert */
-  .header-username {
-    font-size: 1.2rem;
-    text-align: center;
-  }
 
   /* Profilbild kleiner, zentriert */
   .profile-img {
