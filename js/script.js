@@ -254,6 +254,34 @@ function zeigeKachelOptionen() {
   }
 }
 
+// Logout-Funktion hinzufügen
+function setupLogoutButton() {
+  let logoutBtn = document.getElementById('logoutBtn');
+  if (!logoutBtn) {
+    logoutBtn = document.createElement('button');
+    logoutBtn.id = 'logoutBtn';
+    logoutBtn.textContent = 'Logout';
+    logoutBtn.style.position = 'fixed';
+    logoutBtn.style.bottom = '1rem';
+    logoutBtn.style.right = '1rem';
+    logoutBtn.style.padding = '0.4rem 0.8rem';
+    logoutBtn.style.borderRadius = '8px';
+    logoutBtn.style.border = 'none';
+    logoutBtn.style.background = '#e6735f';
+    logoutBtn.style.color = '#fff';
+    logoutBtn.style.cursor = 'pointer';
+    logoutBtn.style.zIndex = '10000';
+    document.body.appendChild(logoutBtn);
+
+    logoutBtn.onclick = async () => {
+      await auth.signOut();
+      alert('Erfolgreich ausgeloggt.');
+      // Seite neu laden, um UI zu aktualisieren
+      window.location.reload();
+    };
+  }
+}
+
 // --- START ---
 
 window.onload = () => {
@@ -264,6 +292,7 @@ window.onload = () => {
       document.getElementById('contentContainer').style.display = 'block';
       updateUsernameInHeader(user.email || user.displayName || "User");
       showEditButton();
+      setupLogoutButton();
 
       // SmartBio-Daten laden
       try {
@@ -279,6 +308,9 @@ window.onload = () => {
     } else {
       document.getElementById('loginContainer').style.display = 'block';
       document.getElementById('contentContainer').style.display = 'none';
+      // Logout-Button entfernen falls vorhanden
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) logoutBtn.remove();
     }
   });
 
