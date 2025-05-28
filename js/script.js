@@ -1,13 +1,46 @@
-let isLoggedIn = true; // Simuliert Login
+let isLoggedIn = false; // Start: nicht eingeloggt
 let isEditing = false;
+let userName = null;
 
 // Sobald die Seite geladen ist
 window.onload = () => {
-  if (isLoggedIn) {
+  // Prüfe Login-Status im localStorage
+  userName = localStorage.getItem('userName');
+  isLoggedIn = !!userName;
+
+  if (!isLoggedIn) {
+    // Login anzeigen, Content verstecken
+    document.getElementById('loginContainer').style.display = 'block';
+    document.getElementById('contentContainer').style.display = 'none';
+  } else {
+    // Content anzeigen, Login verstecken
+    document.getElementById('loginContainer').style.display = 'none';
+    document.getElementById('contentContainer').style.display = 'block';
+    updateUsernameInHeader();
     showEditButton();
   }
 
-  // Kachel-Optionen Buttons verbinden
+  // Registrierungs-Button Handler
+  const registerBtn = document.getElementById('registerBtn');
+  if (registerBtn) {
+    registerBtn.onclick = () => {
+      const inputName = document.getElementById('inputName').value.trim();
+      if (!inputName) {
+        alert('Bitte gib einen Namen ein!');
+        return;
+      }
+      userName = inputName;
+      localStorage.setItem('userName', userName);
+      isLoggedIn = true;
+      // UI umschalten
+      document.getElementById('loginContainer').style.display = 'none';
+      document.getElementById('contentContainer').style.display = 'block';
+      updateUsernameInHeader();
+      showEditButton();
+    };
+  }
+
+  // Kachel-Optionen Buttons verbinden (dein Original)
   document.querySelectorAll('#kachelOptionen button').forEach(btn => {
     btn.addEventListener('click', () => {
       const type = btn.textContent.includes('Quadratisch') ? 'square' : (btn.textContent.includes('halbe') ? 'half' : 'full');
@@ -15,7 +48,7 @@ window.onload = () => {
     });
   });
 
-  // Theme-Dropdown Event (wird erst sichtbar im Edit-Mode)
+  // Theme-Dropdown Event (dein Original)
   const themeDropdown = document.getElementById('themeDropdown');
   if (themeDropdown) {
     themeDropdown.addEventListener('change', function () {
@@ -24,7 +57,15 @@ window.onload = () => {
   }
 };
 
-// Bearbeiten-Button anzeigen (nur einmal)
+// Helfer: Username im Header aktualisieren
+function updateUsernameInHeader() {
+  const headerUsername = document.getElementById('headerUsername');
+  if (headerUsername && userName) {
+    headerUsername.textContent = userName;
+  }
+}
+
+// Bearbeiten-Button anzeigen (dein Original unverändert)
 function showEditButton() {
   const header = document.querySelector('.header');
   if (header.querySelector('#editModeBtn')) return; // Button existiert schon, nicht erneut hinzufügen
@@ -43,7 +84,7 @@ function showEditButton() {
   header.appendChild(editBtn);
 }
 
-// Bearbeitungsmodus umschalten
+// Bearbeitungsmodus umschalten (dein Original unverändert)
 function toggleEditMode() {
   isEditing = !isEditing;
 
@@ -90,7 +131,7 @@ function toggleEditMode() {
   }
 }
 
-// Neue Kachel hinzufügen
+// Neue Kachel hinzufügen (dein Original unverändert)
 function addTile(type) {
   const tiles = document.querySelector('.tiles');
   const newTile = document.createElement('div');
@@ -126,7 +167,7 @@ function addTile(type) {
   }
 }
 
-// Theme-Wechsel Funktion
+// Theme-Wechsel Funktion (dein Original unverändert)
 function wechselTheme(name) {
   const link = document.getElementById('themeStylesheet');
   if (link) {
