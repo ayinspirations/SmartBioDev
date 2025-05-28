@@ -34,15 +34,17 @@ function showEditButton() {
   const lowerBtn = document.querySelector('.btn.bearbeiten-unten');
   if (lowerBtn) lowerBtn.remove();
 
-  if (header.querySelector('#editModeBtn')) return;
+  if (document.getElementById('editModeBtn')) return;
 
   const editBtn = document.createElement('button');
   editBtn.id = 'editModeBtn';
   editBtn.textContent = 'Bearbeiten';
-  
+
   // Positioniere über CSS (siehe CSS-Anpassung)
   editBtn.onclick = toggleEditMode;
-  header.appendChild(editBtn);
+
+  // Statt in den Header in den Body einfügen:
+  document.body.appendChild(editBtn);
 }
 
 // Umschalten Bearbeitungsmodus, Buttontext und Farbe wechseln
