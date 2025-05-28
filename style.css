@@ -50,24 +50,40 @@ header h1 {
   color: var(--primary);
 }
 .header {
-  /* Entferne flex-direction: row, falls vorhanden */
-  display: flex;
-  flex-direction: column;  /* statt Reihe, spalte */
-  align-items: center;     /* zentriert horizontal */
-  gap: 0.4rem;             /* Abstand zwischen Elementen */
-  background: transparent !important;
-  padding: 1rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  z-index: 1000;
+  position: relative; /* nicht fixiert */
+  background: transparent;
+  padding: 1rem 0;
   text-align: center;
   font-family: 'Segoe UI', sans-serif;
+  box-shadow: none;
+  z-index: auto;
 }
 
 .header h1 {
-  margin: 0;
-  font-weight: 600;
+  display: inline-flex;           /* alles in einer Zeile */
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 auto;
   font-size: 2rem;
+  font-weight: 600;
   color: var(--primary);
+  user-select: none;
+}
+
+.header-collab {
+  font-weight: 300;      /* dünn */
+  font-size: 2.6rem;     /* größer */
+  color: #6e5d4d;
+  user-select: none;
+  line-height: 1;
+}
+.header-username {
+  font-weight: 300;    /* dünner */
+  font-size: 1.8rem;
+  color: #6e5d4d;
+  user-select: text;   /* editierbar wenn aktiviert */
+  outline: none;       /* keine Umrandung beim editieren */
+  cursor: text;
 }
 
 #editModeBtn {
@@ -87,7 +103,7 @@ header h1 {
 
 
 .header-brand {
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.03em;
   color: var(--primary);
 }

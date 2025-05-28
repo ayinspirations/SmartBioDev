@@ -54,14 +54,28 @@ function showEditButton() {
 function toggleEditMode() {
   isEditing = !isEditing;
 
+
   const themeSelector = document.getElementById('themeSelector');
   if (themeSelector) {
     themeSelector.style.display = isEditing ? 'block' : 'none';
   }
 
+   // Username editierbar machen oder sperren
+  const usernameEl = document.getElementById('headerUsername');
+  if (usernameEl) {
+    usernameEl.contentEditable = isEditing;
+    if (isEditing) {
+      usernameEl.focus();
+      // Optional: Cursor ans Ende setzen
+      document.execCommand('selectAll', false, null);
+      document.getSelection().collapseToEnd();
+    }
+  }
+
   // Speichern Button sichtbar machen (falls vorhanden)
   const saveBtn = document.getElementById('saveBtn');
   if (saveBtn) saveBtn.style.display = isEditing ? 'inline-block' : 'none';
+  
 
   document.querySelectorAll('.tile').forEach(tile => {
     if (tile.classList.contains('add-tile')) return;
