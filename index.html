@@ -219,6 +219,29 @@
       <footer>© 2025 SmartBio</footer>
     </div>
   </div>
+  
+<!-- Popup Overlay für Kachel hinzufügen -->
+<div id="tilePopup" class="tile-popup hidden">
+  <div class="tile-popup-content">
+    <h2>Kachel hinzufügen</h2>
+    <label>
+      Link (URL):
+      <input type="url" id="tileLinkInput" placeholder="https://example.com" />
+    </label>
+    <label>
+      Text:
+      <input type="text" id="tileTextInput" placeholder="Text für Kachel" />
+    </label>
+    <label>
+      Bild-URL:
+      <input type="url" id="tileImageInput" placeholder="https://example.com/image.jpg" />
+    </label>
+    <div class="tile-popup-buttons">
+      <button id="tileAddBtn">Hinzufügen</button>
+      <button id="tileCancelBtn">Abbrechen</button>
+    </div>
+  </div>
+</div>
 
   <script src="./js/script.js"></script>
 </body>

@@ -51,13 +51,12 @@ function showEditButton() {
 function toggleEditMode() {
   isEditing = !isEditing;
 
-
   const themeSelector = document.getElementById('themeSelector');
   if (themeSelector) {
     themeSelector.style.display = isEditing ? 'block' : 'none';
   }
 
-   // Username editierbar machen oder sperren
+  // Username editierbar machen oder sperren
   const usernameEl = document.getElementById('headerUsername');
   if (usernameEl) {
     usernameEl.contentEditable = isEditing;
@@ -72,34 +71,41 @@ function toggleEditMode() {
   // Speichern Button sichtbar machen (falls vorhanden)
   const saveBtn = document.getElementById('saveBtn');
   if (saveBtn) saveBtn.style.display = isEditing ? 'inline-block' : 'none';
-  
 
-  document.querySelectorAll('.tile').forEach(tile => {
-    if (tile.classList.contains('add-tile')) return;
+  const tilesContainer = document.getElementById('tilesContainer');
+  if (!tilesContainer) return;
 
-    if (isEditing) {
-      const removeBtn = document.createElement('span');
-      removeBtn.textContent = '✖';
-      removeBtn.style.position = 'absolute';
-      removeBtn.style.top = '8px';
-      removeBtn.style.right = '8px';
-      removeBtn.style.color = '#e6735f';
-      removeBtn.style.cursor = 'pointer';
-      removeBtn.classList.add('remove-btn');
-      removeBtn.onclick = () => tile.remove();
-      tile.style.position = 'relative';
-      tile.appendChild(removeBtn);
-      tile.contentEditable = true;
-    } else {
-      const existing = tile.querySelector('.remove-btn');
-      if (existing) existing.remove();
-      tile.contentEditable = false;
-    }
-  });
+  if (isEditing) {
+    // Alte Kacheln ausblenden, stattdessen 3 Beispiel-Kacheln + Plus-Kachel anzeigen
+    tilesContainer.innerHTML = ''; // Clear all
 
-  const kachelOptionen = document.getElementById('kachelOptionen');
-  if (kachelOptionen) {
-    kachelOptionen.style.display = isEditing ? 'flex' : 'none';
+    // 1: volle Breite (full)
+    const full = document.createElement('div');
+    full.classList.add('tile', 'full', 'add-tile');
+    full.textContent = '+';
+    full.title = 'Neue volle Breite Kachel hinzufügen';
+    full.onclick = () => openTilePopup('full');
+    tilesContainer.appendChild(full);
+
+    // 2: halbe Breite (half)
+    const half = document.createElement('div');
+    half.classList.add('tile', 'half', 'add-tile');
+    half.textContent = '+';
+    half.title = 'Neue halbe Breite Kachel hinzufügen';
+    half.onclick = () => openTilePopup('half');
+    tilesContainer.appendChild(half);
+
+    // 3: quadratisch (square)
+    const square = document.createElement('div');
+    square.classList.add('tile', 'square', 'add-tile');
+    square.textContent = '+';
+    square.title = 'Neue quadratische Kachel hinzufügen';
+    square.onclick = () => openTilePopup('square');
+    tilesContainer.appendChild(square);
+
+  } else {
+    // Bearbeitungsmodus aus -> Lade gespeicherte Kacheln neu (aus Firestore oder default)
+    loadSavedTiles();
   }
 
   const editBtn = document.getElementById('editModeBtn');
@@ -110,43 +116,114 @@ function toggleEditMode() {
     } else {
       editBtn.textContent = 'Bearbeiten';
       editBtn.style.backgroundColor = '#e6735f'; // Standardfarbe
+      saveSmartBioData();
     }
   }
 }
 
-// Kacheln hinzufügen
-function addTile(type) {
-  const tiles = document.querySelector('.tiles');
+// Lädt die Kacheln aus Firestore neu (oder default)
+async function loadSavedTiles() {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  try {
+    const doc = await db.collection('smartbios').doc(user.uid).get();
+    if (doc.exists) {
+      loadSmartBioData(doc.data());
+    }
+  } catch (err) {
+    console.error('Fehler beim Laden der gespeicherten Kacheln:', err);
+  }
+}
+
+// Öffnet das Popup zum Kachel hinzufügen mit vorgegebenem Typ
+function openTilePopup(type) {
+  const popup = document.getElementById('tilePopup');
+  if (!popup) return;
+
+  popup.style.display = 'block';
+  popup.dataset.type = type;
+
+  // Felder zurücksetzen
+  document.getElementById('tileLinkInput').value = '';
+  document.getElementById('tileTextInput').value = '';
+  document.getElementById('tileImageInput').value = '';
+}
+
+// Schließt das Popup
+function closeTilePopup() {
+  const popup = document.getElementById('tilePopup');
+  if (!popup) return;
+  popup.style.display = 'none';
+}
+
+// Speichert neue Kachel aus Popup
+function saveTileFromPopup() {
+  const type = document.getElementById('tilePopup').dataset.type;
+  const link = document.getElementById('tileLinkInput').value.trim();
+  const text = document.getElementById('tileTextInput').value.trim();
+  const image = document.getElementById('tileImageInput').value.trim();
+
+  if (!link && !text && !image) {
+    alert('Bitte mindestens einen Link, Text oder Bild-URL eingeben!');
+    return;
+  }
+
+  const tilesContainer = document.getElementById('tilesContainer');
+  if (!tilesContainer) return;
+
+  // Erstelle Kachel-Div
   const newTile = document.createElement('div');
-  newTile.classList.add('tile');
+  newTile.classList.add('tile', type);
   newTile.style.position = 'relative';
 
-  if (type === 'half') {
-    let lastRow = tiles.querySelector('.tile-row:last-child');
-    if (!lastRow || lastRow.childElementCount === 2 || !lastRow.classList.contains('tile-row')) {
-      lastRow = document.createElement('div');
-      lastRow.classList.add('tile-row');
-      tiles.insertBefore(lastRow, document.getElementById('kachelOptionen'));
+  // Inneren Inhalt aufbauen
+  // Wenn Link vorhanden, mache ganze Kachel klickbar
+  if (link) {
+    const a = document.createElement('a');
+    a.href = link;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.style.color = 'inherit';
+    a.style.textDecoration = 'none';
+    newTile.appendChild(a);
+
+    // Text und Bild ins <a>
+    if (text) {
+      const textDiv = document.createElement('div');
+      textDiv.textContent = text;
+      a.appendChild(textDiv);
     }
-    newTile.innerHTML = prompt('Text für die Kachel:') || 'Neue halbe Kachel';
-    lastRow.appendChild(newTile);
-  } else if (type === 'square') {
-    const img = document.createElement('img');
-    img.src = prompt('Bild-URL für die Kachel:') || 'https://via.placeholder.com/150';
-    const text = document.createElement('div');
-    text.textContent = prompt('Text für die Kachel:') || 'Quadratische Kachel';
-
-    newTile.appendChild(text);
-    newTile.appendChild(img);
-
-    const row = document.createElement('div');
-    row.classList.add('tile-row');
-    row.appendChild(newTile);
-    tiles.insertBefore(row, document.getElementById('kachelOptionen'));
+    if (image) {
+      const img = document.createElement('img');
+      img.src = image;
+      img.alt = text || 'Kachel Bild';
+      a.appendChild(img);
+    }
   } else {
-    newTile.innerHTML = prompt('Text für die Kachel:') || 'Neue Kachel (volle Breite)';
-    tiles.insertBefore(newTile, document.getElementById('kachelOptionen'));
+    // Kein Link -> normal Text + Bild hinzufügen
+    if (text) {
+      const textDiv = document.createElement('div');
+      textDiv.textContent = text;
+      newTile.appendChild(textDiv);
+    }
+    if (image) {
+      const img = document.createElement('img');
+      img.src = image;
+      img.alt = text || 'Kachel Bild';
+      newTile.appendChild(img);
+    }
   }
+
+  // Füge Kachel ein vor der Plus-Kachel, falls Bearbeitungsmodus an
+  const plusTile = tilesContainer.querySelector('.add-tile');
+  if (plusTile) {
+    tilesContainer.insertBefore(newTile, plusTile);
+  } else {
+    tilesContainer.appendChild(newTile);
+  }
+
+  closeTilePopup();
 }
 
 // Theme-Wechsel Funktion
@@ -198,26 +275,16 @@ function loadSmartBioData(data) {
       tilesContainer.appendChild(tileDiv);
     });
 
-    // Add "add-tile" and kachel-optionen if missing
-    if (!tilesContainer.querySelector('.add-tile')) {
-      const addTileDiv = document.createElement('div');
-      addTileDiv.classList.add('tile', 'add-tile');
-      addTileDiv.textContent = '+';
-      addTileDiv.onclick = zeigeKachelOptionen;
-      tilesContainer.appendChild(addTileDiv);
-    }
-
-    if (!document.getElementById('kachelOptionen')) {
-      const kachelOptionen = document.createElement('div');
-      kachelOptionen.id = 'kachelOptionen';
-      kachelOptionen.classList.add('kachel-optionen');
-      kachelOptionen.style.display = 'none';
-      kachelOptionen.innerHTML = `
-        <button onclick="addTile('full')">Rechteckig – ganze Breite</button>
-        <button onclick="addTile('half')">Rechteckig – halbe Breite</button>
-        <button onclick="addTile('square')">Quadratisch</button>
-      `;
-      tilesContainer.appendChild(kachelOptionen);
+    // Add "add-tile" and kachel-optionen if missing (visible nur im Bearbeitungsmodus)
+    if (isEditing) {
+      if (!tilesContainer.querySelector('.add-tile')) {
+        const addTileDiv = document.createElement('div');
+        addTileDiv.classList.add('tile', 'add-tile');
+        addTileDiv.textContent = '+';
+        addTileDiv.title = 'Neue Kachel hinzufügen';
+        addTileDiv.onclick = () => openTilePopup('full'); // Default: volle Breite
+        tilesContainer.appendChild(addTileDiv);
+      }
     }
   }
 }
@@ -430,63 +497,7 @@ if (authForm) {
     const formTitle = document.getElementById('formTitle').textContent;
     const email = document.getElementById('emailInput').value.trim();
     const password = document.getElementById('passwordInput').value.trim();
-    const registerBtn = document.getElementById('registerBtn');
-
-    if (!email || !password || password.length < 6) {
-      showToast('Bitte gültige E-Mail und Passwort (mindestens 6 Zeichen) eingeben.', 'error');
-      return false;
-    }
-
-    // Button kurz deaktivieren um Doppelklick zu verhindern
-    registerBtn.disabled = true;
-
-    try {
-      if (formTitle === 'Registrieren') {
-        await auth.createUserWithEmailAndPassword(email, password);
-        showToast('Registrierung erfolgreich! Du bist jetzt eingeloggt.', 'success');
-      } else {
-        await auth.signInWithEmailAndPassword(email, password);
-        showToast('Login erfolgreich!', 'success');
-      }
-      authForm.reset();
-    } catch (error) {
-      // Optional: Fehler etwas benutzerfreundlicher anzeigen
-      let msg = error.message;
-      if (error.code === 'auth/email-already-in-use') {
-        msg = 'Diese E-Mail wird bereits verwendet. Bitte einloggen.';
-      } else if (error.code === 'auth/wrong-password') {
-        msg = 'Falsches Passwort. Bitte erneut versuchen.';
-      } else if (error.code === 'auth/user-not-found') {
-        msg = 'Kein Nutzer mit dieser E-Mail gefunden.';
-      }
-      showToast('Fehler: ' + msg, 'error');
-    } finally {
-      registerBtn.disabled = false;
-    }
-    return false;
-  };
+    const registerBtn = document.get
+ }
+ }
 }
-
-
-  // Kachel-Optionen Buttons verbinden
-  document.querySelectorAll('#kachelOptionen button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const type = btn.textContent.includes('Quadratisch') ? 'square' : (btn.textContent.includes('halbe') ? 'half' : 'full');
-      addTile(type);
-    });
-  });
-
-  // Theme-Dropdown Event verbinden
-  const themeDropdown = document.getElementById('themeDropdown');
-  if (themeDropdown) {
-    themeDropdown.addEventListener('change', function () {
-      wechselTheme(this.value);
-    });
-  }
-
-  // Speichern Button event
-  const saveBtn = document.getElementById('saveBtn');
-  if (saveBtn) {
-    saveBtn.onclick = saveSmartBioData;
-  }
-};

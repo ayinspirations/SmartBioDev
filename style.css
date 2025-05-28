@@ -574,3 +574,119 @@ body.theme-mint {
   font-weight: bold;
   z-index: 1100;
 }
+/* Popup Overlay */
+.tile-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+}
+
+.tile-popup.hidden {
+  display: none;
+}
+
+.tile-popup-content {
+  background: var(--soft);
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.tile-popup-content h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.tile-popup-content label {
+  display: block;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.tile-popup-content input {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  margin-top: 0.25rem;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+.tile-popup-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.tile-popup-buttons button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+#tileAddBtn {
+  background-color: var(--cta);
+  color: white;
+}
+
+#tileAddBtn:hover {
+  background-color: var(--primary);
+}
+
+#tileCancelBtn {
+  background-color: var(--soft);
+  color: var(--primary);
+  box-shadow: 0 0 3px rgba(0,0,0,0.1);
+}
+
+#tileCancelBtn:hover {
+  background-color: #f0d8cc;
+}
+
+/* Neue Kachel-Stile (im Bearbeitungsmodus) */
+.tile-selector {
+  background: transparent;
+  border: 2px dashed var(--accent);
+  color: var(--cta);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  height: 60px;
+  user-select: none;
+}
+
+.tile-selector.full {
+  width: 100%;
+}
+
+.tile-selector.half {
+  width: 48%;
+  height: 60px;
+}
+
+.tile-selector.square {
+  width: 48%;
+  aspect-ratio: 1 / 1;
+}
