@@ -6,12 +6,39 @@
   <title>SmartBio x linaandtheboys</title>
   <link id="themeStylesheet" rel="stylesheet" href="themes/theme-boho.css" />
   <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Optional: kleine CSS-Anpassung für Dropdown */
+    #themeSelector select {
+      padding: 0.3rem 0.5rem;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      background-color: white;
+      cursor: pointer;
+    }
+  </style>
 </head>
-<body class="theme-default">
+<body class="theme-default" style="position:relative;">
+
+  <div id="themeSelector" style="display:none; position: absolute; top: 1rem; left: 1rem; z-index: 1000; background:#fff; padding: 0.3rem 0.5rem; border-radius: 6px; box-shadow: 0 0 6px rgba(0,0,0,0.1); font-family: sans-serif;">
+    <label for="themeDropdown" style="font-weight:bold; font-size:0.9rem; margin-right: 0.5rem; user-select:none;">🎨 Theme:</label>
+    <select id="themeDropdown" aria-label="Theme auswählen">
+      <option value="boho">Boho</option>
+      <option value="creme">Creme</option>
+      <option value="chocolate">Chocolate</option>
+      <option value="sunset">Sunset</option>
+      <option value="minimal">Minimal</option>
+    </select>
+  </div>
+
+  <button id="editModeBtn" style="position:absolute; top:1rem; right:1rem; z-index:1000; padding: 0.4rem 0.8rem; border:none; border-radius:4px; background:#5a4; color:#fff; cursor:pointer; font-weight:bold;">
+    Bearbeiten
+  </button>
+
   <div class="container">
     <div class="header">
       <h1>SmartBio <span>x linaandtheboys</span></h1>
-      <img src="https://via.placeholder.com/120" alt="Profilbild" class="profile-img" id="profileImg">
+      <img src="https://via.placeholder.com/120" alt="Profilbild" class="profile-img" id="profileImg" />
     </div>
 
     <p class="intro" id="bioText">Hi, ich bin Lina & ich liebe Content Creation mit meinen Katzen!</p>
@@ -25,59 +52,59 @@
       <div class="tile-row">
         <div class="tile" contenteditable="false">
           Mjamjam Code: Selina10
-          <img src="https://via.placeholder.com/300x200?text=Mjamjam" alt="Mjamjam">
+          <img src="https://via.placeholder.com/300x200?text=Mjamjam" alt="Mjamjam" />
         </div>
         <div class="tile" contenteditable="false">
           LucyBalu Code: Selina10
-          <img src="https://via.placeholder.com/300x200?text=LucyBalu" alt="LucyBalu">
+          <img src="https://via.placeholder.com/300x200?text=LucyBalu" alt="LucyBalu" />
         </div>
       </div>
 
       <div class="tile" contenteditable="false">
         Lieblingsprodukte
-        <img src="https://via.placeholder.com/300x200?text=Lieblingsprodukte" alt="Lieblingsprodukte">
+        <img src="https://via.placeholder.com/300x200?text=Lieblingsprodukte" alt="Lieblingsprodukte" />
       </div>
 
       <div class="tile add-tile" onclick="zeigeKachelOptionen()">+</div>
 
-      <div class="kachel-optionen" id="kachelOptionen">
+      <div class="kachel-optionen" id="kachelOptionen" style="display:none;">
         <button onclick="kachelHinzufuegen('full')">Rechteckig – ganze Breite</button>
         <button onclick="kachelHinzufuegen('half')">Rechteckig – halbe Breite</button>
         <button onclick="kachelHinzufuegen('square')">Quadratisch</button>
-      </div>
-
-      <!-- Theme Switcher Section -->
-      <div class="theme-switcher" style="margin-top: 2rem; text-align: center;">
-        <p style="margin-bottom: 0.5rem;">🖌️ Theme wechseln:</p>
-        <button onclick="wechselTheme('boho')">Boho</button>
-        <button onclick="wechselTheme('creme')">Creme</button>
-        <button onclick="wechselTheme('chocolate')">Chocolate</button>
-        <button onclick="wechselTheme('sunset')">Sunset</button>
-        <button onclick="wechselTheme('minimal')">Minimal</button>
       </div>
     </div>
 
     <div class="social-section">
       <div class="social-item">
-        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
+        <img
+          class="social-icon"
+          src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png"
+          alt="Instagram"
+        />
         <a class="social-link" href="https://instagram.com/linaandtheboys" target="_blank">@linaandtheboys</a>
         <span style="margin-left:auto">9.800 Follower</span>
       </div>
       <div class="social-item">
-        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png" alt="TikTok">
+        <img
+          class="social-icon"
+          src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png"
+          alt="TikTok"
+        />
         <a class="social-link" href="#" target="_blank">@linaandtheboys</a>
         <span style="margin-left:auto">4.300 Follower</span>
       </div>
       <div class="social-item">
-        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn">
+        <img
+          class="social-icon"
+          src="https://cdn-icons-png.flaticon.com/512/174/174857.png"
+          alt="LinkedIn"
+        />
         <a class="social-link" href="#" target="_blank">/lina-katzen</a>
         <span style="margin-left:auto">1.200 Kontakte</span>
       </div>
     </div>
 
-    <footer>
-      © 2025 SmartBio
-    </footer>
+    <footer>© 2025 SmartBio</footer>
   </div>
 
   <script src="script.js"></script>

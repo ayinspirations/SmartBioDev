@@ -14,6 +14,14 @@ window.onload = () => {
       addTile(type);
     });
   });
+
+  // Theme-Dropdown Event (wird erst sichtbar im Edit-Mode)
+  const themeDropdown = document.getElementById('themeDropdown');
+  if (themeDropdown) {
+    themeDropdown.addEventListener('change', function () {
+      wechselTheme(this.value);
+    });
+  }
 };
 
 // Bearbeiten-Button anzeigen
@@ -35,6 +43,14 @@ function showEditButton() {
 // Bearbeitungsmodus umschalten
 function toggleEditMode() {
   isEditing = !isEditing;
+
+  // Toggle ThemeSelector Dropdown
+  const themeSelector = document.getElementById('themeSelector');
+  if (themeSelector) {
+    themeSelector.style.display = isEditing ? 'block' : 'none';
+  }
+
+  // Tiles editieren / entfernen aktivieren
   document.querySelectorAll('.tile').forEach(tile => {
     if (tile.classList.contains('add-tile')) return;
 
@@ -50,14 +66,26 @@ function toggleEditMode() {
       removeBtn.onclick = () => tile.remove();
       tile.style.position = 'relative';
       tile.appendChild(removeBtn);
+      tile.contentEditable = true; // Optional: Inhalte direkt editierbar
     } else {
       const existing = tile.querySelector('.remove-btn');
       if (existing) existing.remove();
+      tile.contentEditable = false;
     }
   });
 
+  // Kachel-Optionen Buttons anzeigen/verstecken
   const kachelOptionen = document.getElementById('kachelOptionen');
-  kachelOptionen.style.display = isEditing ? 'flex' : 'none';
+  if (kachelOptionen) {
+    kachelOptionen.style.display = isEditing ? 'flex' : 'none';
+  }
+
+  // Button-Text anpassen
+  const header = document.querySelector('.header');
+  const editBtn = header.querySelector('button');
+  if (editBtn) {
+    editBtn.textContent = isEditing ? 'Bearbeiten beenden' : 'Bearbeiten';
+  }
 }
 
 // Neue Kachel hinzufügen
@@ -99,5 +127,7 @@ function addTile(type) {
 // Theme-Wechsel Funktion
 function wechselTheme(name) {
   const link = document.getElementById('themeStylesheet');
-  link.href = `themes/theme-${name}.css`;
+  if (link) {
+    link.href = `themes/theme-${name}.css`;
+  }
 }
