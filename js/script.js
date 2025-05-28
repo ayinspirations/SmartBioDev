@@ -11,6 +11,7 @@ const firebaseConfig = {
 // Firebase initialisieren (compat Version)
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
+const db = firebase.firestore();
 
 // ------------------------------------------------------
 
@@ -43,7 +44,7 @@ function showEditButton() {
   header.appendChild(editBtn);
 }
 
-// Umschalten Bearbeitungsmodus (deine bestehende Logik)
+// Umschalten Bearbeitungsmodus
 function toggleEditMode() {
   isEditing = !isEditing;
 
@@ -51,6 +52,10 @@ function toggleEditMode() {
   if (themeSelector) {
     themeSelector.style.display = isEditing ? 'block' : 'none';
   }
+
+  // Speichern Button ein-/ausblenden
+  const saveBtn = document.getElementById('saveBtn');
+  if (saveBtn) saveBtn.style.display = isEditing ? 'inline-block' : 'none';
 
   document.querySelectorAll('.tile').forEach(tile => {
     if (tile.classList.contains('add-tile')) return;
@@ -86,7 +91,7 @@ function toggleEditMode() {
   }
 }
 
-// Kacheln hinzufügen (dein bestehender Code)
+// Kacheln hinzufügen
 function addTile(type) {
   const tiles = document.querySelector('.tiles');
   const newTile = document.createElement('div');
@@ -121,7 +126,7 @@ function addTile(type) {
   }
 }
 
-// Theme-Wechsel Funktion (dein Original)
+// Theme-Wechsel Funktion
 function wechselTheme(name) {
   const link = document.getElementById('themeStylesheet');
   if (link) {
@@ -129,93 +134,175 @@ function wechselTheme(name) {
   }
 }
 
+// Daten laden und UI befüllen
+function loadSmartBioData(data) {
+  if (!data) return;
+
+  if (data.profileImage) {
+    document.querySelector('.profile-img').src = data.profileImage;
+  }
+  if (data.bioText) {
+    document.getElementById('bioText').textContent = data.bioText;
+  }
+  if (data.theme) {
+    wechselTheme(data.theme);
+    document.getElementById('themeDropdown').value = data.theme;
+  }
+
+  if (Array.isArray(data.tiles)) {
+    const tilesContainer = document.getElementById('tilesContainer');
+    tilesContainer.innerHTML = ''; // clear existing
+
+    data.tiles.forEach(tile => {
+      const tileDiv = document.createElement('div');
+      tileDiv.classList.add('tile');
+      tileDiv.classList.add(tile.type || 'full');
+      tileDiv.style.position = 'relative';
+      tileDiv.contentEditable = false;
+      tileDiv.innerHTML = tile.content || '';
+
+      if (tile.image) {
+        const img = document.createElement('img');
+        img.src = tile.image;
+        tileDiv.appendChild(img);
+      }
+      tilesContainer.appendChild(tileDiv);
+    });
+
+    // Add "add-tile" and kachel-optionen if missing
+    if (!tilesContainer.querySelector('.add-tile')) {
+      const addTileDiv = document.createElement('div');
+      addTileDiv.classList.add('tile', 'add-tile');
+      addTileDiv.textContent = '+';
+      addTileDiv.onclick = zeigeKachelOptionen;
+      tilesContainer.appendChild(addTileDiv);
+    }
+
+    if (!document.getElementById('kachelOptionen')) {
+      const kachelOptionen = document.createElement('div');
+      kachelOptionen.id = 'kachelOptionen';
+      kachelOptionen.classList.add('kachel-optionen');
+      kachelOptionen.style.display = 'none';
+      kachelOptionen.innerHTML = `
+        <button onclick="addTile('full')">Rechteckig – ganze Breite</button>
+        <button onclick="addTile('half')">Rechteckig – halbe Breite</button>
+        <button onclick="addTile('square')">Quadratisch</button>
+      `;
+      tilesContainer.appendChild(kachelOptionen);
+    }
+  }
+}
+
+// Default SmartBio-Daten für neue User
+function getDefaultSmartBio(email) {
+  return {
+    username: email.split('@')[0],
+    bioText: "Hi, ich bin neu bei SmartBio!",
+    profileImage: "images/placeholder.png",
+    theme: "boho",
+    tiles: [
+      { type: "half", content: "Willkommen bei SmartBio!", image: "images/placeholder.png" },
+    ]
+  };
+}
+
+// Daten speichern in Firestore
+function saveSmartBioData() {
+  const user = auth.currentUser;
+  if (!user) {
+    alert("Bitte einloggen!");
+    return;
+  }
+
+  const profileImage = document.querySelector('.profile-img').src;
+  const bioText = document.getElementById('bioText').textContent;
+  const theme = document.getElementById('themeDropdown').value;
+
+  const tilesContainer = document.getElementById('tilesContainer');
+  const tiles = [];
+  tilesContainer.querySelectorAll('.tile').forEach(tile => {
+    if (tile.classList.contains('add-tile') || tile.id === 'kachelOptionen') return;
+    const type = tile.classList.contains('half') ? 'half' : tile.classList.contains('square') ? 'square' : 'full';
+    const content = tile.childNodes[0].textContent || tile.textContent || '';
+    const imgEl = tile.querySelector('img');
+    const image = imgEl ? imgEl.src : null;
+    tiles.push({ type, content, image });
+  });
+
+  const smartBioData = {
+    username: user.email.split('@')[0],
+    bioText,
+    profileImage,
+    theme,
+    tiles
+  };
+
+  db.collection('smartbios').doc(user.uid).set(smartBioData)
+    .then(() => {
+      alert("SmartBio erfolgreich gespeichert!");
+    })
+    .catch(err => {
+      alert("Fehler beim Speichern: " + err.message);
+    });
+}
+
+// Zeige Kachel-Optionen
+function zeigeKachelOptionen() {
+  const kachelOptionen = document.getElementById('kachelOptionen');
+  if (kachelOptionen) {
+    kachelOptionen.style.display = kachelOptionen.style.display === 'flex' ? 'none' : 'flex';
+  }
+}
+
 // --- START ---
 
 window.onload = () => {
-  const loginContainer = document.getElementById('loginContainer');
-  const contentContainer = document.getElementById('contentContainer');
-  const authForm = document.getElementById('authForm');
-  const formTitle = document.getElementById('formTitle');
-  const toggleLoginText = document.getElementById('toggleLoginText');
-  const toggleLoginLink = document.getElementById('toggleLoginLink');
-  const registerBtn = document.getElementById('registerBtn');
-  const logoutBtn = document.getElementById('logoutBtn');
-  const emailInput = document.getElementById('emailInput');
-  const passwordInput = document.getElementById('passwordInput');
-  const authMessage = document.getElementById('authMessage');
-
-  let isLoginMode = false; // Start mit Registrierung
-
   // Firebase Auth Status beobachten
-  auth.onAuthStateChanged(user => {
+  auth.onAuthStateChanged(async (user) => {
     if (user) {
-      loginContainer.style.display = 'none';
-      contentContainer.style.display = 'block';
+      document.getElementById('loginContainer').style.display = 'none';
+      document.getElementById('contentContainer').style.display = 'block';
       updateUsernameInHeader(user.email || user.displayName || "User");
       showEditButton();
+
+      // SmartBio-Daten laden
+      try {
+        const doc = await db.collection('smartbios').doc(user.uid).get();
+        if (doc.exists) {
+          loadSmartBioData(doc.data());
+        } else {
+          loadSmartBioData(getDefaultSmartBio(user.email));
+        }
+      } catch (error) {
+        console.error("Fehler beim Laden der SmartBio-Daten:", error);
+      }
     } else {
-      loginContainer.style.display = 'block';
-      contentContainer.style.display = 'none';
+      document.getElementById('loginContainer').style.display = 'block';
+      document.getElementById('contentContainer').style.display = 'none';
     }
   });
 
-  // Umschalten Login <-> Registrierung
-  toggleLoginLink.addEventListener('click', () => {
-    isLoginMode = !isLoginMode;
-    authMessage.textContent = "";
-    if (isLoginMode) {
-      formTitle.textContent = "Einloggen";
-      registerBtn.textContent = "Einloggen";
-      toggleLoginText.innerHTML = `Noch keinen Account? <span id="toggleLoginLink" style="color: var(--cta); cursor:pointer;">Hier registrieren</span>`;
-    } else {
-      formTitle.textContent = "Registrieren";
-      registerBtn.textContent = "Registrieren & SmartBio erstellen";
-      toggleLoginText.innerHTML = `Schon registriert? <span id="toggleLoginLink" style="color: var(--cta); cursor:pointer;">Hier einloggen</span>`;
-    }
-    // Wichtig: EventListener neu binden wegen innerHTML Update
-    document.getElementById('toggleLoginLink').addEventListener('click', () => {
-      toggleLoginLink.click();
-    });
-  });
-
-  // Button Handler für Registrierung und Login
-  registerBtn.onclick = async () => {
-    const email = emailInput.value.trim();
-    const password = passwordInput.value.trim();
-    if (!email || !password || password.length < 6) {
-      authMessage.textContent = 'Bitte gültige E-Mail und Passwort (mindestens 6 Zeichen) eingeben.';
-      return;
-    }
-    authMessage.textContent = '';
-
-    try {
-      if (isLoginMode) {
-        // Login
-        await auth.signInWithEmailAndPassword(email, password);
-      } else {
-        // Registrierung
+  // Registrierungs-Button
+  const registerBtn = document.getElementById('registerBtn');
+  if (registerBtn) {
+    registerBtn.onclick = async () => {
+      const email = document.getElementById('emailInput').value.trim();
+      const password = document.getElementById('passwordInput').value.trim();
+      if (!email || !password || password.length < 6) {
+        alert('Bitte gültige E-Mail und Passwort (mindestens 6 Zeichen) eingeben.');
+        return;
+      }
+      try {
         await auth.createUserWithEmailAndPassword(email, password);
         alert('Registrierung erfolgreich! Du bist jetzt eingeloggt.');
-        authForm.reset();
+        document.getElementById('authForm').reset();
+      } catch (error) {
+        alert('Fehler bei Registrierung: ' + error.message);
       }
-    } catch (error) {
-      authMessage.textContent = error.message;
-    }
-  };
+    };
+  }
 
-  // Logout-Button Handler
-  logoutBtn.onclick = async () => {
-    try {
-      await auth.signOut();
-      alert('Du wurdest ausgeloggt.');
-      // Optional: Seite neu laden, damit UI zurückgesetzt wird
-      window.location.reload();
-    } catch (error) {
-      alert('Fehler beim Ausloggen: ' + error.message);
-    }
-  };
-
-  // Kachel-Optionen Buttons verbinden (dein Original)
+  // Kachel-Optionen Buttons verbinden
   document.querySelectorAll('#kachelOptionen button').forEach(btn => {
     btn.addEventListener('click', () => {
       const type = btn.textContent.includes('Quadratisch') ? 'square' : (btn.textContent.includes('halbe') ? 'half' : 'full');
@@ -223,11 +310,17 @@ window.onload = () => {
     });
   });
 
-  // Theme-Dropdown Event (dein Original)
+  // Theme-Dropdown Event verbinden
   const themeDropdown = document.getElementById('themeDropdown');
   if (themeDropdown) {
     themeDropdown.addEventListener('change', function () {
       wechselTheme(this.value);
     });
+  }
+
+  // Speichern Button event
+  const saveBtn = document.getElementById('saveBtn');
+  if (saveBtn) {
+    saveBtn.onclick = saveSmartBioData;
   }
 };

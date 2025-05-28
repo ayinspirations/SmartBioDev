@@ -28,6 +28,7 @@
       font-family: 'Segoe UI', sans-serif;
       color: var(--primary);
       text-align: center;
+      padding-top: 5rem; /* Platz für fixen Header */
     }
 
     #loginContainer h2 {
@@ -85,36 +86,43 @@
       text-decoration: underline;
     }
 
-    /* Dezent positionierter Logout Button ganz unten */
-    #logoutBtn {
-      position: fixed;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: transparent;
-      border: none;
-      color: var(--primary);
-      font-weight: 600;
-      cursor: pointer;
-      font-size: 0.85rem;
-      opacity: 0.6;
-      transition: opacity 0.3s;
-      z-index: 1100;
-      user-select: none;
+    /* Content Container mit Padding für fixen Header */
+    #contentContainer {
+      padding-top: 5rem;
+      display: none;
     }
-    #logoutBtn:hover {
-      opacity: 1;
-      text-decoration: underline;
+
+    /* Fixer Header oben */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      background: var(--soft);
+      padding: 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      z-index: 2000;
+      text-align: center;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    header h1 {
+      margin: 0;
+      font-weight: 700;
+      font-size: 1.8rem;
+      color: var(--primary);
     }
   </style>
 </head>
-
 <!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
 <body class="theme-default" style="position:relative;">
+
+  <!-- Fixer Header immer sichtbar -->
+  <header>
+    <h1>SmartBio</h1>
+  </header>
 
   <!-- LOGIN CONTAINER -->
   <div id="loginContainer">
@@ -126,14 +134,12 @@
       <input type="password" id="passwordInput" placeholder="Mindestens 6 Zeichen" minlength="6" required autocomplete="new-password" />
       <button id="registerBtn" type="button">Registrieren & SmartBio erstellen</button>
     </form>
-    <div class="toggle-login" id="toggleLoginText">
-      Schon registriert? <span id="toggleLoginLink" style="color: var(--cta); cursor:pointer;">Hier einloggen</span>
-    </div>
+    <div class="toggle-login" id="toggleLoginText">Schon registriert? <span id="toggleLoginLink" style="color: var(--cta);">Hier einloggen</span></div>
     <div id="authMessage" style="margin-top:1rem; color: red;"></div>
   </div>
 
   <!-- CONTENT CONTAINER -->
-  <div id="contentContainer" style="display:none;">
+  <div id="contentContainer">
     <!-- Theme Selector Dropdown (nur im Bearbeitungsmodus sichtbar) -->
     <div id="themeSelector" style="display:none; position: absolute; top: 1rem; left: 1rem; z-index: 1000; background:#fff; padding: 0.3rem 0.5rem; border-radius: 6px; box-shadow: 0 0 6px rgba(0,0,0,0.1); font-family: sans-serif;">
       <label for="themeDropdown" style="font-weight:bold; font-size:0.9rem; margin-right: 0.5rem; user-select:none;">🎨 Theme:</label>
@@ -215,9 +221,6 @@
 
       <footer>© 2025 SmartBio</footer>
     </div>
-
-    <!-- Logout Button ganz unten -->
-    <button id="logoutBtn" type="button">Logout</button>
   </div>
 
   <script src="./js/script.js"></script>
