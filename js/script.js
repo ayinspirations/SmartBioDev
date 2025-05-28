@@ -334,6 +334,53 @@ window.onload = () => {
     };
   }
 
+  // Login-Button dynamisch erzeugen und Umschaltung Login/Register
+const toggleLoginLink = document.getElementById('toggleLoginLink');
+const formTitle = document.getElementById('formTitle');
+const registerBtnEl = document.getElementById('registerBtn');
+const authForm = document.getElementById('authForm');
+let isLoginMode = false;
+
+toggleLoginLink.onclick = () => {
+  isLoginMode = !isLoginMode;
+  if (isLoginMode) {
+    formTitle.textContent = "Einloggen";
+    registerBtnEl.textContent = "Einloggen";
+    toggleLoginLink.textContent = "Noch keinen Account? Hier registrieren";
+  } else {
+    formTitle.textContent = "Registrieren";
+    registerBtnEl.textContent = "Registrieren & SmartBio erstellen";
+    toggleLoginLink.textContent = "Schon registriert? Hier einloggen";
+  }
+};
+
+// Button-Handler für Login und Register (gleicher Button)
+registerBtnEl.onclick = async () => {
+  const email = document.getElementById('emailInput').value.trim();
+  const password = document.getElementById('passwordInput').value.trim();
+
+  if (!email || !password || password.length < 6) {
+    alert('Bitte gültige E-Mail und Passwort (mindestens 6 Zeichen) eingeben.');
+    return;
+  }
+
+  try {
+    if (isLoginMode) {
+      // Login
+      await auth.signInWithEmailAndPassword(email, password);
+      alert('Login erfolgreich!');
+    } else {
+      // Registrierung
+      await auth.createUserWithEmailAndPassword(email, password);
+      alert('Registrierung erfolgreich! Du bist jetzt eingeloggt.');
+    }
+    authForm.reset();
+  } catch (error) {
+    alert((isLoginMode ? "Fehler beim Login: " : "Fehler bei Registrierung: ") + error.message);
+  }
+};
+
+
   // Kachel-Optionen Buttons verbinden
   document.querySelectorAll('#kachelOptionen button').forEach(btn => {
     btn.addEventListener('click', () => {
