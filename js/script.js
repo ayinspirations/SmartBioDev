@@ -24,10 +24,13 @@ window.onload = () => {
   }
 };
 
-// Bearbeiten-Button anzeigen
+// Bearbeiten-Button anzeigen (nur einmal)
 function showEditButton() {
   const header = document.querySelector('.header');
+  if (header.querySelector('#editModeBtn')) return; // Button existiert schon, nicht erneut hinzufügen
+
   const editBtn = document.createElement('button');
+  editBtn.id = 'editModeBtn'; // eindeutige ID für spätere Referenz
   editBtn.textContent = 'Bearbeiten';
   editBtn.style.marginTop = '1rem';
   editBtn.style.padding = '0.5rem 1rem';
@@ -81,8 +84,7 @@ function toggleEditMode() {
   }
 
   // Button-Text anpassen
-  const header = document.querySelector('.header');
-  const editBtn = header.querySelector('button');
+  const editBtn = document.getElementById('editModeBtn');
   if (editBtn) {
     editBtn.textContent = isEditing ? 'Bearbeiten beenden' : 'Bearbeiten';
   }
