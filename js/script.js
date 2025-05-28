@@ -210,7 +210,7 @@ function getDefaultSmartBio(email) {
 function saveSmartBioData() {
   const user = auth.currentUser;
   if (!user) {
-    alert("Bitte einloggen!");
+    showToast("Bitte einloggen!", "error");
     return;
   }
 
@@ -239,10 +239,10 @@ function saveSmartBioData() {
 
   db.collection('smartbios').doc(user.uid).set(smartBioData)
     .then(() => {
-      alert("SmartBio erfolgreich gespeichert!");
+      showToast("SmartBio erfolgreich gespeichert!", "success");
     })
     .catch(err => {
-      alert("Fehler beim Speichern: " + err.message);
+      showToast("Fehler beim Speichern: " + err.message, "error");
     });
 }
 
@@ -252,6 +252,24 @@ function zeigeKachelOptionen() {
   if (kachelOptionen) {
     kachelOptionen.style.display = kachelOptionen.style.display === 'flex' ? 'none' : 'flex';
   }
+}
+
+// Toast-Funktion für Meldungen
+function showToast(message, type = 'success', duration = 5000) {
+  const container = document.getElementById('toastContainer');
+  if (!container) return;
+
+  const toast = document.createElement('div');
+  toast.classList.add('toast', type);
+  toast.textContent = message;
+
+  container.appendChild(toast);
+
+  // Nach Dauer ausblenden
+  setTimeout(() => {
+    toast.style.animation = 'fadeOut 0.3s ease forwards';
+    toast.addEventListener('animationend', () => toast.remove());
+  }, duration);
 }
 
 // Logout-Funktion hinzufügen
@@ -275,7 +293,7 @@ function setupLogoutButton() {
 
     logoutBtn.onclick = async () => {
       await auth.signOut();
-      alert('Erfolgreich ausgeloggt.');
+      showToast('Erfolgreich ausgeloggt.', 'success');
       // Seite neu laden, um UI zu aktualisieren
       window.location.reload();
     };
@@ -321,65 +339,64 @@ window.onload = () => {
       const email = document.getElementById('emailInput').value.trim();
       const password = document.getElementById('passwordInput').value.trim();
       if (!email || !password || password.length < 6) {
-        alert('Bitte gültige E-Mail und Passwort (mindestens 6 Zeichen) eingeben.');
+        showToast('Bitte gültige E-Mail und Passwort (mindestens 6 Zeichen) eingeben.', 'error');
         return;
       }
       try {
         await auth.createUserWithEmailAndPassword(email, password);
-        alert('Registrierung erfolgreich! Du bist jetzt eingeloggt.');
+        showToast('Registrierung erfolgreich! Du bist jetzt eingeloggt.', 'success');
         document.getElementById('authForm').reset();
       } catch (error) {
-        alert('Fehler bei Registrierung: ' + error.message);
+        showToast('Fehler bei Registrierung: ' + error.message, 'error');
       }
     };
   }
 
-  // Login-Button dynamisch erzeugen und Umschaltung Login/Register
-const toggleLoginLink = document.getElementById('toggleLoginLink');
-const formTitle = document.getElementById('formTitle');
-const registerBtnEl = document.getElementById('registerBtn');
-const authForm = document.getElementById('authForm');
-let isLoginMode = false;
+  // Login-Link toggle zwischen Registrierung und Login
+  const toggleLoginLink = document.getElementById('toggleLoginLink');
+  if (toggleLoginLink) {
+    toggleLoginLink.onclick = () => {
+      const formTitle = document.getElementById('formTitle');
+      const registerBtn = document.getElementById('registerBtn');
 
-toggleLoginLink.onclick = () => {
-  isLoginMode = !isLoginMode;
-  if (isLoginMode) {
-    formTitle.textContent = "Einloggen";
-    registerBtnEl.textContent = "Einloggen";
-    toggleLoginLink.textContent = "Noch keinen Account? Hier registrieren";
-  } else {
-    formTitle.textContent = "Registrieren";
-    registerBtnEl.textContent = "Registrieren & SmartBio erstellen";
-    toggleLoginLink.textContent = "Schon registriert? Hier einloggen";
-  }
-};
-
-// Button-Handler für Login und Register (gleicher Button)
-registerBtnEl.onclick = async () => {
-  const email = document.getElementById('emailInput').value.trim();
-  const password = document.getElementById('passwordInput').value.trim();
-
-  if (!email || !password || password.length < 6) {
-    alert('Bitte gültige E-Mail und Passwort (mindestens 6 Zeichen) eingeben.');
-    return;
+      if (formTitle.textContent === 'Registrieren') {
+        formTitle.textContent = 'Einloggen';
+        registerBtn.textContent = 'Einloggen';
+      } else {
+        formTitle.textContent = 'Registrieren';
+        registerBtn.textContent = 'Registrieren & SmartBio erstellen';
+      }
+    };
   }
 
-  try {
-    if (isLoginMode) {
-      // Login
-      await auth.signInWithEmailAndPassword(email, password);
-      alert('Login erfolgreich!');
-    } else {
-      // Registrierung
-      await auth.createUserWithEmailAndPassword(email, password);
-      alert('Registrierung erfolgreich! Du bist jetzt eingeloggt.');
-    }
-    authForm.reset();
-  } catch (error) {
-    alert((isLoginMode ? "Fehler beim Login: " : "Fehler bei Registrierung: ") + error.message);
-  }
-};
+  // Login/Register Button je nach Modus
+  const authForm = document.getElementById('authForm');
+  if (authForm) {
+    authForm.onsubmit = async () => {
+      const formTitle = document.getElementById('formTitle').textContent;
+      const email = document.getElementById('emailInput').value.trim();
+      const password = document.getElementById('passwordInput').value.trim();
 
+      if (!email || !password || password.length < 6) {
+        showToast('Bitte gültige E-Mail und Passwort (mindestens 6 Zeichen) eingeben.', 'error');
+        return false;
+      }
+
+      try {
+        if (formTitle === 'Registrieren') {
+          await auth.createUserWithEmailAndPassword(email, password);
+          showToast('Registrierung erfolgreich! Du bist jetzt eingeloggt.', 'success');
+        } else {
+          await auth.signInWithEmailAndPassword(email, password);
+          showToast('Login erfolgreich!', 'success');
+        }
+        authForm.reset();
+      } catch (error) {
+        showToast('Fehler: ' + error.message, 'error');
+      }
+      return false;
+    };
+  }
 
   // Kachel-Optionen Buttons verbinden
   document.querySelectorAll('#kachelOptionen button').forEach(btn => {

@@ -318,3 +318,59 @@ body.theme-mint {
   --soft: #effcf8;
   --cta: #49c7a3;
 }
+
+/* Toast Container (unten rechts) */
+#toastContainer {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 10001;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 300px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Toast Box */
+.toast {
+  background: var(--accent);
+  color: var(--primary);
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(230, 115, 95, 0.4);
+  font-weight: 600;
+  animation: slideIn 0.3s ease forwards, fadeOut 0.3s ease forwards 4.7s;
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+/* Fehler-Toast mit rotem Ton */
+.toast.error {
+  background: #f2dede;
+  color: #a94442;
+  box-shadow: 0 4px 12px rgba(169, 68, 66, 0.5);
+}
+
+/* Erfolg-Toast mit grünem Ton */
+.toast.success {
+  background: #dff0d8;
+  color: #3c763d;
+  box-shadow: 0 4px 12px rgba(60, 118, 61, 0.5);
+}
+
+/* Animation rein */
+@keyframes slideIn {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Animation raus */
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
