@@ -142,9 +142,15 @@ function addTile(type) {
 function wechselTheme(name) {
   const link = document.getElementById('themeStylesheet');
   if (link) {
-    link.href = `themes/theme-${name}.css`;
+    const allowedThemes = ['boho', 'creme', 'chocolate', 'sunset', 'minimal'];
+    if (allowedThemes.includes(name)) {
+      link.href = `themes/theme-${name}.css`;
+    } else {
+      link.href = 'themes/theme-boho.css'; // Fallback
+    }
   }
 }
+
 
 // Daten laden und UI befüllen
 function loadSmartBioData(data) {
