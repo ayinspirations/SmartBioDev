@@ -26,6 +26,7 @@ html, body {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
 }
 
 /* Alte Header-Pseudoelemente entfernen */
@@ -42,13 +43,13 @@ header.hidden {
   display: none !important;
 }
 
-
 header h1 {
   margin: 0;
   font-weight: 700;
   font-size: 1.8rem;
   color: var(--primary);
 }
+
 .header {
   position: relative; /* nicht fixiert */
   background: transparent;
@@ -63,6 +64,7 @@ header h1 {
 .header h1 {
   display: inline-flex;           /* alles in einer Zeile */
   align-items: center;
+  justify-content: center;        /* Zentriert Inhalt */
   gap: 0.5rem;
   margin: 0 auto;
   font-size: 2rem;
@@ -77,7 +79,12 @@ header h1 {
   color: #6e5d4d;
   user-select: none;
   line-height: 1;
+  margin: 0 0.25rem;
+  font-family: 'Segoe UI', sans-serif;
+  display: inline-block;
+  vertical-align: middle;
 }
+
 .header-username {
   font-weight: 300;    /* dünner */
   font-size: 1.8rem;
@@ -85,8 +92,22 @@ header h1 {
   user-select: text;   /* editierbar wenn aktiviert */
   outline: none;       /* keine Umrandung beim editieren */
   cursor: text;
+  margin-left: 0.25rem;
 }
 
+/* Profilbild zentriert */
+.profile-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin: 1rem auto 0 auto; /* zentriert block mit Abstand oben */
+  display: block;
+}
+
+/* Bearbeiten Button rechts oben */
 #editModeBtn {
   position: absolute;
   top: 0.1rem;   /* leicht nach oben verschieben */
@@ -99,6 +120,7 @@ header h1 {
   cursor: pointer;
   font-weight: bold;
   transition: background-color 0.3s ease;
+  z-index: 1100;
 }
 
 #editModeBtn:hover {
@@ -106,49 +128,9 @@ header h1 {
 }
 
 /* Button im Bearbeitungsmodus grün */
-#editModeBtn.editing {
-  background-color: #4CAF50;
-}
-
+#editModeBtn.editing,
 #editModeBtn.save {
-  background: #4caf50; /* grün beim Speichern */
-}
-
-.header-brand {
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  color: var(--primary);
-}
-
-.header-collab {
-  font-weight: 300;        /* dünner Schriftzug */
-  font-size: 2.4rem;       /* etwas größer als vorher */
-  color: #6e5d4d;          /* dezenter Braunton */
-  user-select: none;
-  line-height: 1;
-  margin: 0 0.25rem;
-  font-family: 'Segoe UI', sans-serif;
-  display: inline-block;
-  vertical-align: middle;
-}
-
-
-.header-username {
-  font-weight: 300;
-  font-size: 1.6rem;
-  color: #6e5d4d;
-  font-family: 'Segoe UI', sans-serif;
-}
-
-/* Profilbild zentriert */
-.profile-img {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 4px solid white;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  margin: 0 auto; /* zentriert block */;
+  background-color: #4CAF50; /* grün beim Speichern */
 }
 
 /* Login Container Styling */
@@ -163,6 +145,7 @@ header h1 {
   font-family: 'Segoe UI', sans-serif;
   color: var(--primary);
   text-align: center;
+  box-sizing: border-box;
 }
 
 #loginContainer input {
@@ -203,10 +186,12 @@ header h1 {
   text-decoration: underline;
 }
 
-/* Content Container mit Padding für fixen Header */
+/* Content Container */
 #contentContainer {
   padding-top: 0; /* Kein padding mehr, weil Header nicht fixiert */
   display: none;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .intro {
@@ -232,6 +217,7 @@ header h1 {
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
   cursor: pointer;
   transition: 0.3s;
+  box-sizing: border-box;
 }
 
 .btn.cta {
@@ -249,6 +235,8 @@ header h1 {
   flex-direction: column;
   gap: 1rem;
   margin-top: 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .tile-row {
@@ -256,6 +244,8 @@ header h1 {
   justify-content: space-between;
   gap: 1rem;
   flex-wrap: wrap;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .tile {
@@ -269,6 +259,7 @@ header h1 {
   font-size: 0.9rem;
   flex: 1;
   position: relative;
+  box-sizing: border-box;
 }
 
 .tile img {
@@ -301,7 +292,7 @@ header h1 {
   aspect-ratio: 1 / 1;
 }
 
-/* Kachel-Optionen */
+/* Kachel-Optionen Buttons im Stil des + Felds */
 .kachel-optionen button {
   padding: 1rem;
   border-radius: 12px;
@@ -322,13 +313,13 @@ header h1 {
   border-color: var(--cta);
 }
 
-
 /* Social Media */
 .social-section {
   background: var(--soft);
   border-radius: 16px;
   padding: 1rem;
   margin-top: 2rem;
+  box-sizing: border-box;
 }
 
 .social-item {
@@ -476,6 +467,7 @@ body.theme-mint {
     flex-direction: column;
     font-size: 1.4rem;
     gap: 0.2rem;
+    justify-content: center;
   }
 
   /* Username unter SmartBio, zentriert */
@@ -519,7 +511,7 @@ body.theme-mint {
     aspect-ratio: auto !important; /* Kachelhöhe flexibel */
   }
 
-  /* Theme Selector, Edit Button */
+  /* Theme Selector, Edit Button unten */
   #themeSelector {
     top: auto !important;
     bottom: 1rem !important;
