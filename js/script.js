@@ -39,6 +39,10 @@ function showEditButton() {
   const editBtn = document.createElement('button');
   editBtn.id = 'editModeBtn';
   editBtn.textContent = 'Bearbeiten';
+  editBtn.style.position = 'absolute';
+  editBtn.style.top = '1rem';
+  editBtn.style.right = '1rem';
+  editBtn.style.zIndex = '1000';
   editBtn.style.padding = '0.5rem 1rem';
   editBtn.style.background = '#e6735f';
   editBtn.style.color = '#fff';
