@@ -84,8 +84,31 @@
     #loginContainer .toggle-login:hover {
       text-decoration: underline;
     }
+
+    /* Dezent positionierter Logout Button ganz unten */
+    #logoutBtn {
+      position: fixed;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: transparent;
+      border: none;
+      color: var(--primary);
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.85rem;
+      opacity: 0.6;
+      transition: opacity 0.3s;
+      z-index: 1100;
+      user-select: none;
+    }
+    #logoutBtn:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
   </style>
 </head>
+
 <!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
@@ -98,13 +121,14 @@
     <h2 id="formTitle">Registrieren</h2>
     <form id="authForm" autocomplete="off" onsubmit="return false;">
       <label for="emailInput">E-Mail</label>
-      <input <input type="email" id="emailInput" placeholder="Deine E-Mail" required autocomplete="username" />
+      <input type="email" id="emailInput" placeholder="Deine E-Mail" required autocomplete="username" />
       <label for="passwordInput">Passwort</label>
       <input type="password" id="passwordInput" placeholder="Mindestens 6 Zeichen" minlength="6" required autocomplete="new-password" />
       <button id="registerBtn" type="button">Registrieren & SmartBio erstellen</button>
-
     </form>
-    <div class="toggle-login" id="toggleLoginText">Schon registriert? <span id="toggleLoginLink" style="color: var(--cta);">Hier einloggen</span></div>
+    <div class="toggle-login" id="toggleLoginText">
+      Schon registriert? <span id="toggleLoginLink" style="color: var(--cta); cursor:pointer;">Hier einloggen</span>
+    </div>
     <div id="authMessage" style="margin-top:1rem; color: red;"></div>
   </div>
 
@@ -159,7 +183,7 @@
 
         <div class="tile" contenteditable="false">
           Lieblingsprodukte
-          <img src="images/placeholder.png"Lieblingsprodukte" />
+          <img src="images/placeholder.png" alt="Lieblingsprodukte" />
         </div>
 
         <div class="tile add-tile" onclick="zeigeKachelOptionen()">+</div>
@@ -191,6 +215,9 @@
 
       <footer>© 2025 SmartBio</footer>
     </div>
+
+    <!-- Logout Button ganz unten -->
+    <button id="logoutBtn" type="button">Logout</button>
   </div>
 
   <script src="./js/script.js"></script>

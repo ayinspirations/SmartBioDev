@@ -132,41 +132,88 @@ function wechselTheme(name) {
 // --- START ---
 
 window.onload = () => {
+  const loginContainer = document.getElementById('loginContainer');
+  const contentContainer = document.getElementById('contentContainer');
+  const authForm = document.getElementById('authForm');
+  const formTitle = document.getElementById('formTitle');
+  const toggleLoginText = document.getElementById('toggleLoginText');
+  const toggleLoginLink = document.getElementById('toggleLoginLink');
+  const registerBtn = document.getElementById('registerBtn');
+  const logoutBtn = document.getElementById('logoutBtn');
+  const emailInput = document.getElementById('emailInput');
+  const passwordInput = document.getElementById('passwordInput');
+  const authMessage = document.getElementById('authMessage');
+
+  let isLoginMode = false; // Start mit Registrierung
+
   // Firebase Auth Status beobachten
   auth.onAuthStateChanged(user => {
     if (user) {
-      // User eingeloggt → UI anpassen
-      document.getElementById('loginContainer').style.display = 'none';
-      document.getElementById('contentContainer').style.display = 'block';
+      loginContainer.style.display = 'none';
+      contentContainer.style.display = 'block';
       updateUsernameInHeader(user.email || user.displayName || "User");
       showEditButton();
     } else {
-      // Kein User → Login zeigen, Content verstecken
-      document.getElementById('loginContainer').style.display = 'block';
-      document.getElementById('contentContainer').style.display = 'none';
+      loginContainer.style.display = 'block';
+      contentContainer.style.display = 'none';
     }
   });
 
-  // Registrierungs-Button jetzt mit Eingabe-Feldern (nicht prompt)
-const registerBtn = document.getElementById('registerBtn');
-if (registerBtn) {
+  // Umschalten Login <-> Registrierung
+  toggleLoginLink.addEventListener('click', () => {
+    isLoginMode = !isLoginMode;
+    authMessage.textContent = "";
+    if (isLoginMode) {
+      formTitle.textContent = "Einloggen";
+      registerBtn.textContent = "Einloggen";
+      toggleLoginText.innerHTML = `Noch keinen Account? <span id="toggleLoginLink" style="color: var(--cta); cursor:pointer;">Hier registrieren</span>`;
+    } else {
+      formTitle.textContent = "Registrieren";
+      registerBtn.textContent = "Registrieren & SmartBio erstellen";
+      toggleLoginText.innerHTML = `Schon registriert? <span id="toggleLoginLink" style="color: var(--cta); cursor:pointer;">Hier einloggen</span>`;
+    }
+    // Wichtig: EventListener neu binden wegen innerHTML Update
+    document.getElementById('toggleLoginLink').addEventListener('click', () => {
+      toggleLoginLink.click();
+    });
+  });
+
+  // Button Handler für Registrierung und Login
   registerBtn.onclick = async () => {
-    const email = document.getElementById('emailInput').value.trim();
-    const password = document.getElementById('passwordInput').value.trim();
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
     if (!email || !password || password.length < 6) {
-      alert('Bitte gültige E-Mail und Passwort (mindestens 6 Zeichen) eingeben.');
+      authMessage.textContent = 'Bitte gültige E-Mail und Passwort (mindestens 6 Zeichen) eingeben.';
       return;
     }
+    authMessage.textContent = '';
+
     try {
-      await auth.createUserWithEmailAndPassword(email, password);
-      alert('Registrierung erfolgreich! Du bist jetzt eingeloggt.');
-      document.getElementById('authForm').reset();
+      if (isLoginMode) {
+        // Login
+        await auth.signInWithEmailAndPassword(email, password);
+      } else {
+        // Registrierung
+        await auth.createUserWithEmailAndPassword(email, password);
+        alert('Registrierung erfolgreich! Du bist jetzt eingeloggt.');
+        authForm.reset();
+      }
     } catch (error) {
-      alert('Fehler bei Registrierung: ' + error.message);
+      authMessage.textContent = error.message;
     }
   };
-}
 
+  // Logout-Button Handler
+  logoutBtn.onclick = async () => {
+    try {
+      await auth.signOut();
+      alert('Du wurdest ausgeloggt.');
+      // Optional: Seite neu laden, damit UI zurückgesetzt wird
+      window.location.reload();
+    } catch (error) {
+      alert('Fehler beim Ausloggen: ' + error.message);
+    }
+  };
 
   // Kachel-Optionen Buttons verbinden (dein Original)
   document.querySelectorAll('#kachelOptionen button').forEach(btn => {
