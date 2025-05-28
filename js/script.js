@@ -514,7 +514,7 @@ if (authForm) {
     const formTitle = document.getElementById('formTitle').textContent;
     const email = document.getElementById('emailInput').value.trim();
     const password = document.getElementById('passwordInput').value.trim();
-    const registerBtn = document.get
+    const registerBtn = document.getElementById("registerBtn");
     }
   }
 }
