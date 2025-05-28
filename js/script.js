@@ -237,7 +237,6 @@ function saveTileFromPopup() {
   }
 
   closeTilePopup();
-}
 
 // Theme-Wechsel Funktion
 function wechselTheme(name) {
