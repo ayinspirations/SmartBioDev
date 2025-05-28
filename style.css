@@ -34,16 +34,20 @@ html, body {
   content: none !important;
 }
 
-/* Neuer Header als Spalte mit zentriertem Profilbild */
-.header {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  background: var(--soft);
-  padding: 1rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  z-index: 1000;
-  text-align: center;
-  font-family: 'Segoe UI', sans-serif;
+header {
+  display: block; /* Standard sichtbar */
+}
+
+header.hidden {
+  display: none !important;
+}
+
+
+header h1 {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1.8rem;
+  color: var(--primary);
 }
 
 .header h1 {
@@ -58,15 +62,15 @@ html, body {
 }
 
 .header-brand {
-  font-weight: 600;           /* mittel-fett */
+  font-weight: 600;
   letter-spacing: 0.03em;
   color: var(--primary);
 }
 
 .header-collab {
-  color: #6e5d4d;             /* gleiche Farbe wie Username */
-  font-weight: 400;           /* gleiche Gewichtung wie Username */
-  font-size: 2rem;            /* groß */
+  color: #6e5d4d;
+  font-weight: 400;
+  font-size: 2rem;
   user-select: none;
   line-height: 1;
   margin: 0 0.25rem;
@@ -74,9 +78,9 @@ html, body {
 }
 
 .header-username {
-  font-weight: 300;           /* dünner */
+  font-weight: 300;
   font-size: 1.6rem;
-  color: #6e5d4d;             /* dezenter Braunton */
+  color: #6e5d4d;
   font-family: 'Segoe UI', sans-serif;
 }
 
@@ -131,7 +135,23 @@ html, body {
   background-color: var(--primary);
 }
 
-/* Rest deines CSS unverändert */
+#loginContainer .toggle-login {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: var(--primary);
+  cursor: pointer;
+  user-select: none;
+}
+
+#loginContainer .toggle-login:hover {
+  text-decoration: underline;
+}
+
+/* Content Container mit Padding für fixen Header */
+#contentContainer {
+  padding-top: 0; /* Kein padding mehr, weil Header nicht fixiert */
+  display: none;
+}
 
 .intro {
   text-align: center;

@@ -307,32 +307,43 @@ function setupLogoutButton() {
 window.onload = () => {
   // Firebase Auth Status beobachten
   auth.onAuthStateChanged(async (user) => {
-    if (user) {
-      document.getElementById('loginContainer').style.display = 'none';
-      document.getElementById('contentContainer').style.display = 'block';
-      updateUsernameInHeader(user.email || user.displayName || "User");
-      showEditButton();
-      setupLogoutButton();
+  const header = document.querySelector('header');
+  if (user) {
+    // Nutzer eingeloggt
+    document.getElementById('loginContainer').style.display = 'none';
+    document.getElementById('contentContainer').style.display = 'block';
+    updateUsernameInHeader(user.email || user.displayName || "User");
+    showEditButton();
+    setupLogoutButton();
 
-      // SmartBio-Daten laden
-      try {
-        const doc = await db.collection('smartbios').doc(user.uid).get();
-        if (doc.exists) {
-          loadSmartBioData(doc.data());
-        } else {
-          loadSmartBioData(getDefaultSmartBio(user.email));
-        }
-      } catch (error) {
-        console.error("Fehler beim Laden der SmartBio-Daten:", error);
+    // Header verstecken
+    if (header) header.classList.add('hidden');
+
+    // Lade SmartBio Daten etc.
+    try {
+      const doc = await db.collection('smartbios').doc(user.uid).get();
+      if (doc.exists) {
+        loadSmartBioData(doc.data());
+      } else {
+        loadSmartBioData(getDefaultSmartBio(user.email));
       }
-    } else {
-      document.getElementById('loginContainer').style.display = 'block';
-      document.getElementById('contentContainer').style.display = 'none';
-      // Logout-Button entfernen falls vorhanden
-      const logoutBtn = document.getElementById('logoutBtn');
-      if (logoutBtn) logoutBtn.remove();
+    } catch (error) {
+      console.error("Fehler beim Laden der SmartBio-Daten:", error);
     }
-  });
+  } else {
+    // Nutzer nicht eingeloggt
+    document.getElementById('loginContainer').style.display = 'block';
+    document.getElementById('contentContainer').style.display = 'none';
+
+    // Header anzeigen
+    if (header) header.classList.remove('hidden');
+
+    // Logout-Button entfernen falls vorhanden
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) logoutBtn.remove();
+  }
+});
+
 
   // Registrierungs-Button
   const registerBtn = document.getElementById('registerBtn');
