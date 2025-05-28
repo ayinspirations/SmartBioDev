@@ -31,6 +31,7 @@ html, body {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
 }
 
 header {
@@ -41,13 +42,7 @@ header.hidden {
   display: none !important;
 }
 
-header h1 {
-  margin: 0;
-  font-weight: 700;
-  font-size: 1.8rem;
-  color: var(--primary);
-}
-
+/* HEADER - SmartBio, X, Username untereinander, zentriert */
 .header {
   position: relative;
   background: transparent;
@@ -62,27 +57,28 @@ header h1 {
 }
 
 .header h1 {
-  display: inline-flex;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.3rem;
   margin: 0 auto 1rem auto;
   font-weight: 700;
-  font-size: 1.9rem;
   color: var(--primary);
   user-select: none;
-  white-space: normal; /* Ermöglicht Zeilenumbruch, falls nötig */
-  max-width: 100%; /* Nicht zu klein */
-  flex-wrap: nowrap; /* Verhindert Umbruch zwischen SmartBio, X, Name */
+  max-width: 100%;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
 }
 
 .header-brand {
+  font-size: 2.5rem;
   font-weight: 700;
-  font-size: 1.9rem;
 }
 
 .header-collab {
-  font-weight: 100; /* dünn */
-  font-size: 2.6rem;
+  font-weight: 100;
+  font-size: 3rem;
   line-height: 1;
   color: #6e5d4d;
   user-select: none;
@@ -90,17 +86,17 @@ header h1 {
 
 .header-username {
   font-weight: 300;
-  font-size: 1.7rem;
+  font-size: 1.8rem;
   color: #6e5d4d;
   user-select: text;
   cursor: text;
-  max-width: none; /* Keine Kürzung */
-  white-space: nowrap; /* Keine Zeilenumbrüche beim Namen */
+  margin-left: 0;
+  white-space: normal;
   overflow: visible;
   text-overflow: clip;
-  margin-left: 0.3rem;
 }
 
+/* Profilbild zentriert */
 .profile-img {
   width: 80px;
   height: 80px;
@@ -108,10 +104,11 @@ header h1 {
   object-fit: cover;
   border: 4px solid white;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  margin: 0 auto;
+  margin: 0 auto 1.5rem auto;
   display: block;
 }
 
+/* Bearbeiten Button - fixed oben rechts */
 #editModeBtn {
   position: fixed;
   top: 1rem;
@@ -148,6 +145,7 @@ header h1 {
   font-family: 'Segoe UI', sans-serif;
   color: var(--primary);
   text-align: center;
+  box-sizing: border-box;
 }
 
 #loginContainer input {
@@ -157,6 +155,7 @@ header h1 {
   border-radius: 8px;
   border: 1px solid var(--accent);
   margin-bottom: 1rem;
+  box-sizing: border-box;
 }
 
 #loginContainer button {
@@ -192,6 +191,7 @@ header h1 {
   padding-top: 0;
   display: none;
   width: 100%;
+  box-sizing: border-box;
 }
 
 /* Intro Text */
@@ -219,6 +219,7 @@ header h1 {
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
   cursor: pointer;
   transition: 0.3s;
+  box-sizing: border-box;
 }
 
 .btn.cta {
@@ -238,6 +239,7 @@ header h1 {
   gap: 1rem;
   margin-top: 1.5rem;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .tile-row {
@@ -246,6 +248,7 @@ header h1 {
   gap: 1rem;
   flex-wrap: wrap;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .tile {
@@ -259,6 +262,7 @@ header h1 {
   font-size: 0.9rem;
   flex: 1;
   position: relative;
+  box-sizing: border-box;
 }
 
 .tile img {
@@ -317,6 +321,7 @@ header h1 {
   border-radius: 16px;
   padding: 1rem;
   margin-top: 2rem;
+  box-sizing: border-box;
 }
 
 .social-item {
@@ -459,29 +464,70 @@ body.theme-mint {
     box-shadow: none;
   }
 
+  #themeSelector {
+    top: auto !important;
+    bottom: 1rem !important;
+    left: 1rem !important;
+  }
+
+  #editModeBtn {
+    top: 1rem !important;
+    bottom: auto !important;
+    right: 1rem !important;
+    width: auto;
+    font-size: 1rem;
+  }
+
+  /* Header mobiler Modus (Untereinander) */
   .header h1 {
+    display: flex;
     flex-direction: column;
-    font-size: 1.4rem;
-    gap: 0.2rem;
+    align-items: center;
+    gap: 0.3rem;
+    margin: 0 auto 1rem auto;
+    font-weight: 700;
+    color: var(--primary);
+    user-select: none;
+    max-width: 100%;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+  }
+
+  .header-brand {
+    font-size: 2.5rem;
+    font-weight: 700;
   }
 
   .header-collab {
-    font-size: 2rem;
-    margin: 0 0.15rem;
+    font-weight: 100;
+    font-size: 3rem;
+    line-height: 1;
+    color: #6e5d4d;
+    user-select: none;
   }
 
   .header-username {
-    font-size: 1.2rem;
-    text-align: center;
+    font-weight: 300;
+    font-size: 1.8rem;
+    color: #6e5d4d;
+    user-select: text;
+    cursor: text;
+    margin-left: 0;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
   }
 
+  /* Profilbild mobil kleiner und zentriert */
   .profile-img {
     width: 60px;
     height: 60px;
-    margin: 0.5rem auto;
+    margin: 0.5rem auto 1rem auto;
     display: block;
   }
 
+  /* Buttons mobiler Modus (vollbreit) */
   .buttons {
     flex-direction: column;
     gap: 0.8rem;
@@ -492,6 +538,7 @@ body.theme-mint {
     width: 100%;
   }
 
+  /* Kacheln mobiler Modus vollbreit */
   .tiles {
     gap: 1rem;
   }
@@ -505,19 +552,5 @@ body.theme-mint {
   .tile.square {
     width: 100% !important;
     aspect-ratio: auto !important;
-  }
-
-  #themeSelector {
-    top: auto !important;
-    bottom: 1rem !important;
-    left: 1rem !important;
-  }
-
-  #editModeBtn {
-    top: 1rem !important;       /* oben fixieren */
-    bottom: auto !important;    /* unten deaktivieren */
-    right: 1rem !important;
-    width: auto;
-    font-size: 1rem;
   }
 }
