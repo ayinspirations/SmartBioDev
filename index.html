@@ -7,7 +7,7 @@
   <link id="themeStylesheet" rel="stylesheet" href="themes/theme-boho.css" />
   <link rel="stylesheet" href="style.css" />
   <style>
-    /* Optional: kleine CSS-Anpassung für Dropdown */
+    /* Inline Styles für Theme Selector Dropdown */
     #themeSelector select {
       padding: 0.3rem 0.5rem;
       border-radius: 4px;
@@ -20,6 +20,7 @@
 </head>
 <body class="theme-default" style="position:relative;">
 
+  <!-- Theme Selector Dropdown (nur im Bearbeitungsmodus sichtbar) -->
   <div id="themeSelector" style="display:none; position: absolute; top: 1rem; left: 1rem; z-index: 1000; background:#fff; padding: 0.3rem 0.5rem; border-radius: 6px; box-shadow: 0 0 6px rgba(0,0,0,0.1); font-family: sans-serif;">
     <label for="themeDropdown" style="font-weight:bold; font-size:0.9rem; margin-right: 0.5rem; user-select:none;">🎨 Theme:</label>
     <select id="themeDropdown" aria-label="Theme auswählen">
@@ -31,14 +32,21 @@
     </select>
   </div>
 
-  <button id="editModeBtn" style="position:absolute; top:1rem; right:1rem; z-index:1000; padding: 0.4rem 0.8rem; border:none; border-radius:4px; background:#5a4; color:#fff; cursor:pointer; font-weight:bold;">
+  <!-- Bearbeiten Button oben rechts -->
+  <button id="editModeBtn" style="position:absolute; top:1rem; right:1rem; z-index:1000; padding: 0.4rem 0.8rem; border:none; border-radius:4px; background:#e6735f; color:#fff; cursor:pointer; font-weight:bold;">
     Bearbeiten
   </button>
 
   <div class="container">
+
+    <!-- Header mit neuem modernem Aufbau -->
     <div class="header">
-      <h1>SmartBio <span>x linaandtheboys</span></h1>
-      <img src="https://via.placeholder.com/120" alt="Profilbild" class="profile-img" id="profileImg" />
+      <h1>
+        <span class="header-brand">SmartBio</span>
+        <span class="header-collab">×</span>
+        <span class="header-username">linaandtheboys</span>
+      </h1>
+      <img src="https://via.placeholder.com/120" alt="Profilbild" class="profile-img" />
     </div>
 
     <p class="intro" id="bioText">Hi, ich bin Lina & ich liebe Content Creation mit meinen Katzen!</p>
@@ -68,9 +76,9 @@
       <div class="tile add-tile" onclick="zeigeKachelOptionen()">+</div>
 
       <div class="kachel-optionen" id="kachelOptionen" style="display:none;">
-        <button onclick="kachelHinzufuegen('full')">Rechteckig – ganze Breite</button>
-        <button onclick="kachelHinzufuegen('half')">Rechteckig – halbe Breite</button>
-        <button onclick="kachelHinzufuegen('square')">Quadratisch</button>
+        <button onclick="addTile('full')">Rechteckig – ganze Breite</button>
+        <button onclick="addTile('half')">Rechteckig – halbe Breite</button>
+        <button onclick="addTile('square')">Quadratisch</button>
       </div>
     </div>
 
