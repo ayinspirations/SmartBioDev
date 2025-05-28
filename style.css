@@ -554,3 +554,23 @@ body.theme-mint {
     aspect-ratio: auto !important;
   }
 }
+
+#editModeBtn, #logoutBtn {
+  transition: opacity 0.3s ease;
+}
+
+#logoutBtn {
+  opacity: 0;
+  pointer-events: none;
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  padding: 0.4rem 1rem;
+  background: #e6735f;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  z-index: 1100;
+}

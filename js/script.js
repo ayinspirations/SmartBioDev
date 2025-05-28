@@ -393,6 +393,34 @@ if (toggleLoginLink) {
   };
 }
 
+// Button beim scrollen einblenden/ausblenden
+
+window.addEventListener('scroll', () => {
+  const editBtn = document.getElementById('editModeBtn');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  if (!editBtn || !logoutBtn) return;
+
+  const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const scrollTop = window.scrollY;
+
+  if (scrollTop > 0) {
+    editBtn.style.opacity = '0';
+    editBtn.style.pointerEvents = 'none';
+  } else {
+    editBtn.style.opacity = '1';
+    editBtn.style.pointerEvents = 'auto';
+  }
+
+  if (scrollTop / scrollableHeight > 0.9) {
+    logoutBtn.style.opacity = '1';
+    logoutBtn.style.pointerEvents = 'auto';
+  } else {
+    logoutBtn.style.opacity = '0';
+    logoutBtn.style.pointerEvents = 'none';
+  }
+});
+
 // Login/Register Button je nach Modus
 const authForm = document.getElementById('authForm');
 if (authForm) {
