@@ -89,7 +89,7 @@ header h1 {
 
 #editModeBtn {
   position: absolute;
-  top: 0.3rem;   /* leicht nach oben verschieben */
+  top: 1rem;   /* leicht nach oben verschieben */
   right: 0.5rem; /* rechtsbündig mit etwas Abstand */
   padding: 0.4rem 1rem;
   background: #e6735f;
