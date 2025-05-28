@@ -508,13 +508,34 @@ window.addEventListener('load', () => {
 // Login/Register Button je nach Modus
 const authForm = document.getElementById('authForm');
 if (authForm) {
-  authForm.onsubmit = async (event) => {
-    event.preventDefault();  // Formular-Submit verhindern
+  
+authForm.onsubmit = async (event) => {
+  event.preventDefault();
 
-    const formTitle = document.getElementById('formTitle').textContent;
-    const email = document.getElementById('emailInput').value.trim();
-    const password = document.getElementById('passwordInput').value.trim();
-    const registerBtn = document.getElementById("registerBtn");
+  const formTitle = document.getElementById('formTitle').textContent.trim();
+  const email = document.getElementById('emailInput').value.trim();
+  const password = document.getElementById('passwordInput').value.trim();
+
+  try {
+    if (formTitle.toLowerCase().includes("registrieren")) {
+      await auth.createUserWithEmailAndPassword(email, password);
+    } else {
+      await auth.signInWithEmailAndPassword(email, password);
     }
+
+    // Sichtbarkeit ändern nach erfolgreichem Login
+    document.getElementById('loginContainer').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'block';
+
+    // Optional: Username setzen, falls vorhanden
+    const user = auth.currentUser;
+    if (user) {
+      updateUsernameInHeader(user.displayName || user.email.split("@")[0]);
+    }
+  } catch (error) {
+    alert("Fehler: " + error.message);
   }
+};
+
+}
 }
