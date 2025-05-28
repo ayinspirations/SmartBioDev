@@ -360,26 +360,6 @@ window.onload = () => {
     }
   });
 
-  // Registrierungs-Button
-  const registerBtn = document.getElementById('registerBtn');
-  if (registerBtn) {
-    registerBtn.onclick = async () => {
-      const email = document.getElementById('emailInput').value.trim();
-      const password = document.getElementById('passwordInput').value.trim();
-      if (!email || !password || password.length < 6) {
-        showToast('Bitte gültige E-Mail und Passwort (mindestens 6 Zeichen) eingeben.', 'error');
-        return;
-      }
-      try {
-        await auth.createUserWithEmailAndPassword(email, password);
-        showToast('Registrierung erfolgreich! Du bist jetzt eingeloggt.', 'success');
-        document.getElementById('authForm').reset();
-      } catch (error) {
-        showToast('Fehler bei Registrierung: ' + error.message, 'error');
-      }
-    };
-  }
-
   // Login-Link toggle zwischen Registrierung und Login
 const toggleLoginLink = document.getElementById('toggleLoginLink');
 if (toggleLoginLink) {
