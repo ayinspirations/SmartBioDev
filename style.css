@@ -93,7 +93,11 @@ header h1 {
 }
 
 .header-username {
-  margin-right: 120px; /* Abstand zum Button */
+  max-width: calc(100% - 120px); /* je nach Buttonbreite anpassen */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
 }
 
 /* Profilbild zentriert */
@@ -108,23 +112,20 @@ header h1 {
   display: block;
 }
 
-/* Bearbeiten Button oben rechts */
-/* Button außerhalb Header, oben rechts vom Container */
 #editModeBtn {
-  position: absolute; /* oder fixed */
-  top: 1rem;
-  right: 1rem;
+  position: fixed;      /* FIXIERT IM BROWSERFENSTER */
+  top: 1rem;            /* Oben mit Abstand */
+  right: 1rem;          /* Rechts mit Abstand */
+  padding: 0.4rem 1rem;
   background: #e6735f;
   color: white;
   border: none;
-  padding: 0.4rem 1rem;
   border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
-  z-index: 2000;
   transition: background-color 0.3s ease;
+  z-index: 9999;        /* Hoch genug, um alles zu überlagern */
 }
-
 
 #editModeBtn:hover {
   background-color: #cc5a49;
