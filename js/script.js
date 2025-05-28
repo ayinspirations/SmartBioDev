@@ -498,6 +498,6 @@ if (authForm) {
     const email = document.getElementById('emailInput').value.trim();
     const password = document.getElementById('passwordInput').value.trim();
     const registerBtn = document.get
- }
- }
+    }
+  }
 }
