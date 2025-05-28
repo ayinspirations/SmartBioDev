@@ -25,28 +25,32 @@ function updateUsernameInHeader(name) {
   }
 }
 
-// Zeigt Bearbeiten Button falls noch nicht da
+// Zeigt Bearbeiten Button rechts oben im Header, entfernt unteren Bearbeiten-Button (wenn vorhanden)
 function showEditButton() {
   const header = document.querySelector('.header');
+  if (!header) return;
+
+  // Entferne unteren Bearbeiten-Button falls vorhanden (angenommen Klasse "bearbeiten-unten")
+  const lowerBtn = document.querySelector('.btn.bearbeiten-unten');
+  if (lowerBtn) lowerBtn.remove();
+
   if (header.querySelector('#editModeBtn')) return;
 
   const editBtn = document.createElement('button');
-editBtn.id = 'editModeBtn';
-editBtn.textContent = 'Bearbeiten';
-// Entferne marginTop, position, top, right aus Inline-Stil
-// Nur noch grundlegende Styles für Padding, Farben etc.
-editBtn.style.padding = '0.5rem 1rem';
-editBtn.style.background = '#e6735f';
-editBtn.style.color = '#fff';
-editBtn.style.border = 'none';
-editBtn.style.borderRadius = '8px';
-editBtn.style.cursor = 'pointer';
-editBtn.onclick = toggleEditMode;
-header.appendChild(editBtn);
-
+  editBtn.id = 'editModeBtn';
+  editBtn.textContent = 'Bearbeiten';
+  editBtn.style.padding = '0.5rem 1rem';
+  editBtn.style.background = '#e6735f';
+  editBtn.style.color = '#fff';
+  editBtn.style.border = 'none';
+  editBtn.style.borderRadius = '8px';
+  editBtn.style.cursor = 'pointer';
+  // Positioniere über CSS (siehe CSS-Anpassung)
+  editBtn.onclick = toggleEditMode;
+  header.appendChild(editBtn);
 }
 
-// Umschalten Bearbeitungsmodus
+// Umschalten Bearbeitungsmodus, Buttontext und Farbe wechseln
 function toggleEditMode() {
   isEditing = !isEditing;
 
@@ -55,7 +59,7 @@ function toggleEditMode() {
     themeSelector.style.display = isEditing ? 'block' : 'none';
   }
 
-  // Speichern Button ein-/ausblenden
+  // Speichern Button sichtbar machen (falls vorhanden)
   const saveBtn = document.getElementById('saveBtn');
   if (saveBtn) saveBtn.style.display = isEditing ? 'inline-block' : 'none';
 
@@ -89,7 +93,13 @@ function toggleEditMode() {
 
   const editBtn = document.getElementById('editModeBtn');
   if (editBtn) {
-    editBtn.textContent = isEditing ? 'Bearbeiten beenden' : 'Bearbeiten';
+    if (isEditing) {
+      editBtn.textContent = 'Speichern';
+      editBtn.style.backgroundColor = '#4CAF50'; // grün
+    } else {
+      editBtn.textContent = 'Bearbeiten';
+      editBtn.style.backgroundColor = '#e6735f'; // Standardfarbe
+    }
   }
 }
 
@@ -307,43 +317,42 @@ function setupLogoutButton() {
 window.onload = () => {
   // Firebase Auth Status beobachten
   auth.onAuthStateChanged(async (user) => {
-  const header = document.querySelector('header');
-  if (user) {
-    // Nutzer eingeloggt
-    document.getElementById('loginContainer').style.display = 'none';
-    document.getElementById('contentContainer').style.display = 'block';
-    updateUsernameInHeader(user.email || user.displayName || "User");
-    showEditButton();
-    setupLogoutButton();
+    const header = document.querySelector('header');
+    if (user) {
+      // Nutzer eingeloggt
+      document.getElementById('loginContainer').style.display = 'none';
+      document.getElementById('contentContainer').style.display = 'block';
+      updateUsernameInHeader(user.email || user.displayName || "User");
+      showEditButton();
+      setupLogoutButton();
 
-    // Header verstecken
-    if (header) header.classList.add('hidden');
+      // Header verstecken
+      if (header) header.classList.add('hidden');
 
-    // Lade SmartBio Daten etc.
-    try {
-      const doc = await db.collection('smartbios').doc(user.uid).get();
-      if (doc.exists) {
-        loadSmartBioData(doc.data());
-      } else {
-        loadSmartBioData(getDefaultSmartBio(user.email));
+      // Lade SmartBio Daten etc.
+      try {
+        const doc = await db.collection('smartbios').doc(user.uid).get();
+        if (doc.exists) {
+          loadSmartBioData(doc.data());
+        } else {
+          loadSmartBioData(getDefaultSmartBio(user.email));
+        }
+      } catch (error) {
+        console.error("Fehler beim Laden der SmartBio-Daten:", error);
       }
-    } catch (error) {
-      console.error("Fehler beim Laden der SmartBio-Daten:", error);
+    } else {
+      // Nutzer nicht eingeloggt
+      document.getElementById('loginContainer').style.display = 'block';
+      document.getElementById('contentContainer').style.display = 'none';
+
+      // Header anzeigen
+      if (header) header.classList.remove('hidden');
+
+      // Logout-Button entfernen falls vorhanden
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) logoutBtn.remove();
     }
-  } else {
-    // Nutzer nicht eingeloggt
-    document.getElementById('loginContainer').style.display = 'block';
-    document.getElementById('contentContainer').style.display = 'none';
-
-    // Header anzeigen
-    if (header) header.classList.remove('hidden');
-
-    // Logout-Button entfernen falls vorhanden
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) logoutBtn.remove();
-  }
-});
-
+  });
 
   // Registrierungs-Button
   const registerBtn = document.getElementById('registerBtn');
