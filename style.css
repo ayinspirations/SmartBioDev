@@ -28,20 +28,19 @@ html, body {
   flex-direction: column;
 }
 
-/* Alte Header-Pseudoelemente entfernen, um Doppelungen zu verhindern */
+/* Alte Header-Pseudoelemente entfernen */
 .header h1::before,
 .header h1::after {
   content: none !important;
 }
 
-/* Neuer moderner Header */
+/* Neuer Header als Spalte mit zentriertem Profilbild */
 .header {
   display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  justify-content: center;
+  flex-direction: column;    /* untereinander */
+  align-items: center;       /* zentriert */
+  gap: 0.5rem;
   margin-bottom: 1rem;
-  flex-wrap: wrap;
 }
 
 .header h1 {
@@ -56,38 +55,40 @@ html, body {
 }
 
 .header-brand {
-  font-weight: 800;
-  letter-spacing: 0.05em;
+  font-weight: 600;           /* mittel-fett */
+  letter-spacing: 0.03em;
+  color: var(--primary);
 }
 
 .header-collab {
-  color: var(--cta);
-  font-weight: 700;
-  font-size: 1.6rem;
+  color: #6e5d4d;             /* gleiche Farbe wie Username */
+  font-weight: 400;           /* gleiche Gewichtung wie Username */
+  font-size: 2rem;            /* groß */
   user-select: none;
   line-height: 1;
-  transform: translateY(-2px);
-}
-
-.header-username {
-  font-weight: 400;
-  font-size: 1.6rem;
-  color: #6e5d4d;
+  margin: 0 0.25rem;
   font-family: 'Segoe UI', sans-serif;
 }
 
-/* Profilbild anpassen und rechts ausrichten */
+.header-username {
+  font-weight: 300;           /* dünner */
+  font-size: 1.6rem;
+  color: #6e5d4d;             /* dezenter Braunton */
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Profilbild zentriert */
 .profile-img {
-  width: 80px;   /* von 120 auf 80 reduziert, optional */
+  width: 80px;
   height: 80px;
   border-radius: 50%;
   object-fit: cover;
-  margin-left: auto;
+  margin: 0 auto;
   border: 4px solid white;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-/* Der Rest deiner CSS bleibt unverändert */
+/* Rest deines CSS unverändert */
 
 .intro {
   text-align: center;
