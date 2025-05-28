@@ -49,18 +49,20 @@ header h1 {
 }
 
 .header {
-  position: relative;
-  background: transparent;
-  padding: 1rem 1.5rem 2rem 1.5rem; /* Platz rechts für Button */
-  text-align: center;
-  font-family: 'Segoe UI', sans-serif;
-  box-shadow: none;
-  z-index: auto;
-  max-width: 420px;
+  width: 100%; /* Sicherstellen, dass Header volle Breite des Containers hat */
+  max-width: 420px; /* optional */
   margin: 0 auto;
+  position: relative;
+  padding: 1rem 1.5rem 2rem 1.5rem;
+  text-align: center;
+  box-sizing: border-box;
 }
 
 .header h1 {
+  max-width: calc(100% - 180px); /* Mehr Platz für Button */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -70,10 +72,6 @@ header h1 {
   font-weight: 600;
   color: var(--primary);
   user-select: none;
-  max-width: calc(100% - 150px);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .header-brand {
@@ -95,19 +93,7 @@ header h1 {
 }
 
 .header-username {
-  font-weight: 300;
-  font-size: 1.6rem;
-  color: #6e5d4d;
-  font-family: 'Segoe UI', sans-serif;
-  user-select: text;
-  outline: none;
-  cursor: text;
-  max-width: 100%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  vertical-align: middle;
-  margin-left: 0.25rem;
+  margin-right: 120px; /* Abstand zum Button */
 }
 
 /* Profilbild zentriert */
@@ -127,14 +113,6 @@ header h1 {
   position: absolute;
   top: 1rem;
   right: 1.5rem;
-  padding: 0.4rem 1rem;
-  background: #e6735f;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
   z-index: 1100;
 }
 
