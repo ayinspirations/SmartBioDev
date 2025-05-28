@@ -457,3 +457,80 @@ body.theme-mint {
     transform: translateX(100%);
   }
 }
+
+/* Mobile Responsiveness für Bildschirme bis 480px Breite (iPhone etc.) */
+@media (max-width: 480px) {
+  html, body {
+    padding: 0 1rem; /* Etwas Seitenabstand */
+  }
+
+  .container {
+    max-width: 100%;
+    padding: 1.5rem 1rem;
+    border-radius: 0; /* Ränder bei kleinen Bildschirmen eher eckig */
+    box-shadow: none;
+  }
+
+  /* Header flex auf block ändern, damit alles untereinander */
+  .header h1 {
+    flex-direction: column;
+    font-size: 1.4rem;
+    gap: 0.2rem;
+  }
+
+  /* Username unter SmartBio, zentriert */
+  .header-username {
+    font-size: 1.2rem;
+    text-align: center;
+  }
+
+  /* Profilbild kleiner, zentriert */
+  .profile-img {
+    width: 60px;
+    height: 60px;
+    margin: 0.5rem auto;
+    display: block;
+  }
+
+  /* Buttons und Kacheln */
+  .buttons {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .btn {
+    flex: none;
+    width: 100%;
+  }
+
+  /* Kacheln: alle vollbreit stapeln */
+  .tiles {
+    gap: 1rem;
+  }
+
+  .tile-row {
+    flex-direction: column;
+  }
+
+  .tile,
+  .tile.half,
+  .tile.square {
+    width: 100% !important;
+    aspect-ratio: auto !important; /* Kachelhöhe flexibel */
+  }
+
+  /* Theme Selector, Edit Button */
+  #themeSelector {
+    top: auto !important;
+    bottom: 1rem !important;
+    left: 1rem !important;
+  }
+
+  #editModeBtn {
+    top: auto !important;
+    bottom: 1rem !important;
+    right: 1rem !important;
+    width: auto;
+    font-size: 1rem;
+  }
+}
