@@ -539,3 +539,15 @@ authForm.onsubmit = async (event) => {
 
 }
 }
+window.addEventListener('load', () => {
+  const saveBtn = document.getElementById('saveTileBtn');
+  const cancelBtn = document.getElementById('cancelTileBtn');
+
+  if (saveBtn) {
+    saveBtn.addEventListener('click', saveTileFromPopup);
+  }
+
+  if (cancelBtn) {
+    cancelBtn.addEventListener('click', closeTilePopup);
+  }
+});
