@@ -52,7 +52,7 @@ header h1 {
 .header {
   position: relative; /* nicht fixiert */
   background: transparent;
-  padding: 1rem 0;
+  
   padding-right: 6rem;
   text-align: center;
   font-family: 'Segoe UI', sans-serif;
