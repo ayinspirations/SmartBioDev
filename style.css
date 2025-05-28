@@ -1,0 +1,242 @@
+:root {
+  --primary: #5e3b2c;
+  --accent: #f4c7ab;
+  --soft: #fff7f0;
+  --cta: #e6735f;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: var(--soft);
+  color: var(--primary);
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 420px;
+  width: 100%;
+  background: linear-gradient(to bottom, var(--accent) 0%, #fdf2e9 50%, #ffffff 100%);
+  border-bottom-left-radius: 30% 10%;
+  border-bottom-right-radius: 30% 10%;
+  padding: 2rem 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  text-align: center;
+}
+
+.header h1::before {
+  content: "SmartBio ";
+  font-weight: 400;
+}
+
+.header h1::after {
+  content: " x linaandtheboys";
+  font-weight: 300;
+}
+
+.profile-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 1rem auto;
+  display: block;
+  border: 4px solid white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.intro {
+  text-align: center;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.btn {
+  flex: 1 1 48%;
+  background-color: var(--soft);
+  padding: 0.75rem;
+  border-radius: 12px;
+  text-align: center;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn.cta {
+  background-color: var(--cta);
+  color: white;
+}
+
+.btn:hover {
+  background-color: var(--accent);
+  color: white;
+}
+
+.tiles {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.tile-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.tile {
+  background: var(--soft);
+  border-radius: 12px;
+  padding: 1rem;
+  text-align: center;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  cursor: pointer;
+  font-size: 0.9rem;
+  flex: 1;
+}
+
+.tile img {
+  max-width: 100%;
+  border-radius: 8px;
+  margin-top: 0.5rem;
+}
+
+.tile.add-tile {
+  background: var(--soft);
+  border: 2px dashed var(--accent);
+  font-size: 1.5rem;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Neue Kachel-Typen */
+.tile.full {
+  width: 100%;
+}
+
+.tile.half {
+  width: 48%;
+}
+
+.tile.square {
+  width: 48%;
+  aspect-ratio: 1 / 1;
+}
+
+/* Kachel-Optionen */
+.kachel-optionen {
+  display: none;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.kachel-optionen button {
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: none;
+  background-color: var(--accent);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Social Media */
+.social-section {
+  background: var(--soft);
+  border-radius: 16px;
+  padding: 1rem;
+  margin-top: 2rem;
+}
+
+.social-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+  font-size: 1rem;
+}
+
+.social-item:last-child {
+  border-bottom: none;
+}
+
+.social-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.social-link {
+  text-decoration: none;
+  color: var(--primary);
+}
+
+.social-link:hover {
+  text-decoration: underline;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #a67857;
+  margin-top: 2rem;
+}
+
+/* Themes */
+body.theme-default {
+  --primary: #5e3b2c;
+  --accent: #f4c7ab;
+  --soft: #fff7f0;
+  --cta: #e6735f;
+}
+
+body.theme-rose {
+  --primary: #4a2f2a;
+  --accent: #f6c0b0;
+  --soft: #fceeee;
+  --cta: #d86464;
+}
+
+body.theme-sand {
+  --primary: #3e352c;
+  --accent: #e8d1ba;
+  --soft: #f8f4ee;
+  --cta: #b8865d;
+}
+
+body.theme-lavender {
+  --primary: #443358;
+  --accent: #dbc7f0;
+  --soft: #f6f2fa;
+  --cta: #a678c2;
+}
+
+body.theme-mint {
+  --primary: #2c5140;
+  --accent: #bce7dd;
+  --soft: #effcf8;
+  --cta: #49c7a3;
+}

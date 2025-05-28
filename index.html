@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartBio x linaandtheboys</title>
+  <link id="themeStylesheet" rel="stylesheet" href="themes/theme-boho.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="theme-default">
+  <div class="container">
+    <div class="header">
+      <h1>SmartBio <span>x linaandtheboys</span></h1>
+      <img src="https://via.placeholder.com/120" alt="Profilbild" class="profile-img" id="profileImg">
+    </div>
+
+    <p class="intro" id="bioText">Hi, ich bin Lina & ich liebe Content Creation mit meinen Katzen!</p>
+
+    <div class="buttons" id="mainButtons">
+      <div class="btn cta">Kooperationsanfrage senden</div>
+      <div class="btn">Media Kit öffnen</div>
+    </div>
+
+    <div class="tiles" id="tilesContainer">
+      <div class="tile-row">
+        <div class="tile" contenteditable="false">
+          Mjamjam Code: Selina10
+          <img src="https://via.placeholder.com/300x200?text=Mjamjam" alt="Mjamjam">
+        </div>
+        <div class="tile" contenteditable="false">
+          LucyBalu Code: Selina10
+          <img src="https://via.placeholder.com/300x200?text=LucyBalu" alt="LucyBalu">
+        </div>
+      </div>
+
+      <div class="tile" contenteditable="false">
+        Lieblingsprodukte
+        <img src="https://via.placeholder.com/300x200?text=Lieblingsprodukte" alt="Lieblingsprodukte">
+      </div>
+
+      <div class="tile add-tile" onclick="zeigeKachelOptionen()">+</div>
+
+      <div class="kachel-optionen" id="kachelOptionen">
+        <button onclick="kachelHinzufuegen('full')">Rechteckig – ganze Breite</button>
+        <button onclick="kachelHinzufuegen('half')">Rechteckig – halbe Breite</button>
+        <button onclick="kachelHinzufuegen('square')">Quadratisch</button>
+      </div>
+
+      <!-- Theme Switcher Section -->
+      <div class="theme-switcher" style="margin-top: 2rem; text-align: center;">
+        <p style="margin-bottom: 0.5rem;">🖌️ Theme wechseln:</p>
+        <button onclick="wechselTheme('boho')">Boho</button>
+        <button onclick="wechselTheme('creme')">Creme</button>
+        <button onclick="wechselTheme('chocolate')">Chocolate</button>
+        <button onclick="wechselTheme('sunset')">Sunset</button>
+        <button onclick="wechselTheme('minimal')">Minimal</button>
+      </div>
+    </div>
+
+    <div class="social-section">
+      <div class="social-item">
+        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
+        <a class="social-link" href="https://instagram.com/linaandtheboys" target="_blank">@linaandtheboys</a>
+        <span style="margin-left:auto">9.800 Follower</span>
+      </div>
+      <div class="social-item">
+        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png" alt="TikTok">
+        <a class="social-link" href="#" target="_blank">@linaandtheboys</a>
+        <span style="margin-left:auto">4.300 Follower</span>
+      </div>
+      <div class="social-item">
+        <img class="social-icon" src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn">
+        <a class="social-link" href="#" target="_blank">/lina-katzen</a>
+        <span style="margin-left:auto">1.200 Kontakte</span>
+      </div>
+    </div>
+
+    <footer>
+      © 2025 SmartBio
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
