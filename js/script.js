@@ -540,6 +540,19 @@ authForm.onsubmit = async (event) => {
 }
 }
 window.addEventListener('load', () => {
+  const tilesContainer = document.getElementById('tilesContainer');
+
+  if (tilesContainer) {
+    new Sortable(tilesContainer, {
+      animation: 150,
+      ghostClass: 'drag-ghost',
+      onEnd: function (/**Event*/evt) {
+        console.log(`Kachel verschoben von ${evt.oldIndex} nach ${evt.newIndex}`);
+        // Optional: Speicher neue Reihenfolge, z.B. in localStorage oder Firestore
+      }
+    });
+  }
+  
   const saveBtn = document.getElementById('saveTileBtn');
   const cancelBtn = document.getElementById('cancelTileBtn');
 

@@ -263,6 +263,13 @@ header.hidden {
   flex: 1;
   position: relative;
   box-sizing: border-box;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: grab;
+}
+
+.tile:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .tile img {
@@ -690,3 +697,9 @@ body.theme-mint {
   width: 48%;
   aspect-ratio: 1 / 1;
 }
+
+.drag-ghost {
+  opacity: 0.5;
+  background: #f0e7df;
+}
+
