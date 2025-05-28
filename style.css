@@ -53,6 +53,7 @@ header h1 {
   position: relative; /* nicht fixiert */
   background: transparent;
   padding: 1rem 0;
+  padding-right: 6rem;
   text-align: center;
   font-family: 'Segoe UI', sans-serif;
   box-shadow: none;
@@ -88,24 +89,27 @@ header h1 {
 
 #editModeBtn {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
-  padding: 0.5rem 1rem;
+  top: 0.3rem;   /* leicht nach oben verschieben */
+  right: 0.5rem; /* rechtsbündig mit etwas Abstand */
+  padding: 0.4rem 1rem;
   background: #e6735f;
-  color: #fff;
+  color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  z-index: 1000;
-  font-weight: 600;
-  font-size: 1rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  font-weight: bold;
   transition: background-color 0.3s ease;
 }
 
 #editModeBtn:hover {
-  background: #cc5a43;
+  background-color: #cc5a49;
 }
+
+/* Button im Bearbeitungsmodus grün */
+#editModeBtn.editing {
+  background-color: #4CAF50;
+}
+
 #editModeBtn.save {
   background: #4caf50; /* grün beim Speichern */
 }
