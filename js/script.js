@@ -161,7 +161,6 @@ function closeTilePopup() {
 }
 
 // Speichert neue Kachel aus Popup
-// Kachel speichern
 function saveTileFromPopup() {
   const popup = document.getElementById('tilePopup');
   if (!popup) return;
@@ -226,17 +225,6 @@ function saveTileFromPopup() {
 
   closeTilePopup();
 }
-
-
-  // Füge Kachel ein vor der Plus-Kachel, falls Bearbeitungsmodus an
-  const plusTile = tilesContainer.querySelector('.add-tile');
-  if (plusTile) {
-    tilesContainer.insertBefore(newTile, plusTile);
-  } else {
-    tilesContainer.appendChild(newTile);
-  }
-
-  closeTilePopup();
 
 // Theme-Wechsel Funktion
 function wechselTheme(name) {
