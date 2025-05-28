@@ -88,19 +88,23 @@ header h1 {
 
 #editModeBtn {
   position: absolute;
-  top: 0.5rem;    /* etwas höher */
+  top: 1rem;
   right: 1rem;
-  z-index: 1000;
-  padding: 0.4rem 0.8rem;
-  border: none;
-  border-radius: 4px;
+  padding: 0.5rem 1rem;
   background: #e6735f;
   color: #fff;
+  border: none;
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: bold;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
+  z-index: 1000;
+  font-weight: 600;
+  font-size: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.3s ease;
+}
+
+#editModeBtn:hover {
+  background: #cc5a43;
 }
 #editModeBtn.save {
   background: #4caf50; /* grün beim Speichern */
