@@ -515,8 +515,8 @@ body.theme-mint {
   }
 
   #editModeBtn {
-    top: auto !important;
-    bottom: 1rem !important;
+    top: 1rem !important;       /* oben fixieren */
+    bottom: auto !important;    /* unten deaktivieren */
     right: 1rem !important;
     width: auto;
     font-size: 1rem;
