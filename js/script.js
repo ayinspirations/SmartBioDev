@@ -488,6 +488,24 @@ window.addEventListener('scroll', () => {
   }
 });
 
+// Eventhandler für Popup Buttons
+window.addEventListener('load', () => {
+  const saveBtn = document.getElementById('saveTileBtn');
+  const cancelBtn = document.getElementById('cancelTileBtn');
+
+  if (saveBtn) {
+    saveBtn.addEventListener('click', () => {
+      saveTileFromPopup();
+    });
+  }
+
+  if (cancelBtn) {
+    cancelBtn.addEventListener('click', () => {
+      closeTilePopup();
+    });
+  }
+});
+
 // Login/Register Button je nach Modus
 const authForm = document.getElementById('authForm');
 if (authForm) {
