@@ -155,11 +155,18 @@ function closeTilePopup() {
   const popup = document.getElementById('tilePopup');
   if (!popup) return;
   popup.style.display = 'none';
+  document.getElementById('tileLinkInput').value = '';
+  document.getElementById('tileTextInput').value = '';
+  document.getElementById('tileImageInput').value = '';
 }
 
 // Speichert neue Kachel aus Popup
+// Kachel speichern
 function saveTileFromPopup() {
-  const type = document.getElementById('tilePopup').dataset.type;
+  const popup = document.getElementById('tilePopup');
+  if (!popup) return;
+
+  const type = popup.dataset.type;
   const link = document.getElementById('tileLinkInput').value.trim();
   const text = document.getElementById('tileTextInput').value.trim();
   const image = document.getElementById('tileImageInput').value.trim();
@@ -172,13 +179,10 @@ function saveTileFromPopup() {
   const tilesContainer = document.getElementById('tilesContainer');
   if (!tilesContainer) return;
 
-  // Erstelle Kachel-Div
   const newTile = document.createElement('div');
   newTile.classList.add('tile', type);
   newTile.style.position = 'relative';
 
-  // Inneren Inhalt aufbauen
-  // Wenn Link vorhanden, mache ganze Kachel klickbar
   if (link) {
     const a = document.createElement('a');
     a.href = link;
@@ -186,9 +190,7 @@ function saveTileFromPopup() {
     a.rel = 'noopener noreferrer';
     a.style.color = 'inherit';
     a.style.textDecoration = 'none';
-    newTile.appendChild(a);
 
-    // Text und Bild ins <a>
     if (text) {
       const textDiv = document.createElement('div');
       textDiv.textContent = text;
@@ -200,8 +202,8 @@ function saveTileFromPopup() {
       img.alt = text || 'Kachel Bild';
       a.appendChild(img);
     }
+    newTile.appendChild(a);
   } else {
-    // Kein Link -> normal Text + Bild hinzufügen
     if (text) {
       const textDiv = document.createElement('div');
       textDiv.textContent = text;
@@ -214,6 +216,17 @@ function saveTileFromPopup() {
       newTile.appendChild(img);
     }
   }
+
+  const plusTile = tilesContainer.querySelector('.add-tile');
+  if (plusTile) {
+    tilesContainer.insertBefore(newTile, plusTile);
+  } else {
+    tilesContainer.appendChild(newTile);
+  }
+
+  closeTilePopup();
+}
+
 
   // Füge Kachel ein vor der Plus-Kachel, falls Bearbeitungsmodus an
   const plusTile = tilesContainer.querySelector('.add-tile');
