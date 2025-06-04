@@ -359,7 +359,6 @@ function setupLogoutButton() {
   }
 }
 
-// --- START ---
 window.onload = () => {
   // Firebase Auth Status beobachten
   auth.onAuthStateChanged(async (user) => {
@@ -372,9 +371,10 @@ window.onload = () => {
       showEditButton();
       setupLogoutButton();
 
+      // Header verstecken
       if (header) header.classList.add('hidden');
 
-      // SmartBio laden
+      // Lade SmartBio Daten etc.
       try {
         const doc = await db.collection('smartbios').doc(user.uid).get();
         if (doc.exists) {
@@ -386,14 +386,19 @@ window.onload = () => {
         console.error("Fehler beim Laden der SmartBio-Daten:", error);
       }
     } else {
-      // Nicht eingeloggt
+      // Nutzer nicht eingeloggt
       document.getElementById('loginContainer').style.display = 'block';
       document.getElementById('contentContainer').style.display = 'none';
+
+      // Header anzeigen
       if (header) header.classList.remove('hidden');
+
+      // Logout-Button entfernen falls vorhanden
       const logoutBtn = document.getElementById('logoutBtn');
       if (logoutBtn) logoutBtn.remove();
     }
   });
+
   // Login-Link toggle zwischen Registrierung und Login
   const toggleLoginLink = document.getElementById('toggleLoginLink');
   if (toggleLoginLink) {
@@ -401,10 +406,10 @@ window.onload = () => {
       const formTitle = document.getElementById('formTitle');
       const registerBtn = document.getElementById('registerBtn');
       const authMessage = document.getElementById('authMessage');
-      
+
       // Formular zurücksetzen und Meldung entfernen
       document.getElementById('authForm').reset();
-      if(authMessage) authMessage.textContent = '';
+      if (authMessage) authMessage.textContent = '';
 
       if (formTitle.textContent === 'Registrieren') {
         formTitle.textContent = 'Einloggen';
@@ -416,7 +421,7 @@ window.onload = () => {
     };
   }
 
-  // Button beim Scrollen einblenden/ausblenden
+  // Button beim scrollen einblenden/ausblenden
   window.addEventListener('scroll', () => {
     const editBtn = document.getElementById('editModeBtn');
     const logoutBtn = document.getElementById('logoutBtn');
@@ -443,60 +448,34 @@ window.onload = () => {
     }
   });
 
-  // Login/Register Button je nach Modus
-  const authForm = document.getElementById('authForm');
-  if (authForm) {
-    authForm.onsubmit = async (event) => {
-      event.preventDefault();
-
-      const formTitle = document.getElementById('formTitle').textContent.trim();
-      const email = document.getElementById('emailInput').value.trim();
-      const password = document.getElementById('passwordInput').value.trim();
-
-      try {
-        if (formTitle.toLowerCase().includes("registrieren")) {
-          await auth.createUserWithEmailAndPassword(email, password);
-        } else {
-          await auth.signInWithEmailAndPassword(email, password);
-        }
-
-        // Sichtbarkeit ändern nach erfolgreichem Login
-        document.getElementById('loginContainer').style.display = 'none';
-        document.getElementById('mainContent').style.display = 'block';
-
-        // Optional: Username setzen, falls vorhanden
-        const user = auth.currentUser;
-        if (user) {
-          updateUsernameInHeader(user.displayName || user.email.split("@")[0]);
-        }
-      } catch (error) {
-        alert("Fehler: " + error.message);
-      }
-    };
-  }
-
-  window.addEventListener('load', () => {
+  // Initialisiere Sortable mit horizontaler Drag & Drop Unterstützung
   const tilesContainer = document.getElementById('tilesContainer');
 
   if (tilesContainer) {
     new Sortable(tilesContainer, {
       animation: 150,
       ghostClass: 'drag-ghost',
-      direction: 'horizontal', // Hier ergänzt für nebeneinander Verschieben
-      swapThreshold: 0.65,      // Optional für bessere Swap-Erkennung
+      direction: 'horizontal',        // WICHTIG: horizontal verschieben
       fallbackOnBody: true,
+      swapThreshold: 0.65,
       scroll: true,
       onEnd: function (evt) {
         console.log(`Kachel verschoben von ${evt.oldIndex} nach ${evt.newIndex}`);
-        // Optional: Hier neue Reihenfolge speichern (z.B. Firestore)
-
-        const saveBtn = document.getElementById('saveTileBtn');
-    const cancelBtn = document.getElementById('cancelTileBtn');
-
-    if (saveBtn) saveBtn.addEventListener('click', saveTileFromPopup);
-    if (cancelBtn) cancelBtn.addEventListener('click', closeTilePopup);
+        // Optional: Hier kannst du neue Reihenfolge speichern, z.B.:
+        // saveTileOrder();
       }
     });
   }
-});
+
+  // Setze EventListener für Popup-Buttons **nur einmal** (wichtig)
+  const saveBtn = document.getElementById('saveTileBtn');
+  const cancelBtn = document.getElementById('cancelTileBtn');
+
+  if (saveBtn) {
+    saveBtn.addEventListener('click', saveTileFromPopup);
+  }
+  if (cancelBtn) {
+    cancelBtn.addEventListener('click', closeTilePopup);
+  }
 };
+
