@@ -235,11 +235,12 @@ header.hidden {
 /* Kacheln */
 .tiles {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap; /* wichtig für Zeilenumbruch */
   gap: 1rem;
   margin-top: 1.5rem;
   width: 100%;
   box-sizing: border-box;
+  flex-direction: row; /* nebeneinander */
 }
 
 .tile-row {
@@ -548,10 +549,6 @@ body.theme-mint {
   /* Kacheln mobiler Modus vollbreit */
   .tiles {
     gap: 1rem;
-  }
-
-  .tile-row {
-    flex-direction: column;
   }
 
   .tile,

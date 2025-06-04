@@ -1,4 +1,5 @@
-// ---------------- Firebase Config ----------------
+//Backup 04.06
+// // ---------------- Firebase Config: ERSETZE DIESE Werte mit deinen Firebase Projekt-Daten ----------------
 const firebaseConfig = {
   apiKey: "AIzaSyBCTa_qffHHhvauBdJQVyTlMhMmmbN3rag",
   authDomain: "smartbio-app.firebaseapp.com",
@@ -8,13 +9,16 @@ const firebaseConfig = {
   appId: "1:778331841333:web:4865dc2f0575a7b19c627c"
 };
 
+// Firebase initialisieren (compat Version)
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
+// ------------------------------------------------------
+
 let isEditing = false;
 
-// Username im Header setzen
+// Helfer, um Username im Header zu setzen
 function updateUsernameInHeader(name) {
   const headerUsername = document.getElementById('headerUsername');
   if (headerUsername && name) {
@@ -22,11 +26,12 @@ function updateUsernameInHeader(name) {
   }
 }
 
-// Bearbeiten-Button einfügen
+// Zeigt Bearbeiten Button rechts oben im Header, entfernt unteren Bearbeiten-Button (wenn vorhanden)
 function showEditButton() {
   const header = document.querySelector('.header');
   if (!header) return;
 
+  // Entferne unteren Bearbeiten-Button falls vorhanden (angenommen Klasse "bearbeiten-unten")
   const lowerBtn = document.querySelector('.btn.bearbeiten-unten');
   if (lowerBtn) lowerBtn.remove();
 
@@ -35,11 +40,15 @@ function showEditButton() {
   const editBtn = document.createElement('button');
   editBtn.id = 'editModeBtn';
   editBtn.textContent = 'Bearbeiten';
+
+  // Positioniere über CSS (siehe CSS-Anpassung)
   editBtn.onclick = toggleEditMode;
+
+  // Statt in den Header in den Body einfügen:
   document.body.appendChild(editBtn);
 }
 
-// Umschalten zwischen Bearbeitungs- und Ansichtsmodus
+// Umschalten Bearbeitungsmodus, Buttontext und Farbe wechseln
 function toggleEditMode() {
   isEditing = !isEditing;
 
@@ -48,16 +57,19 @@ function toggleEditMode() {
     themeSelector.style.display = isEditing ? 'block' : 'none';
   }
 
+  // Username editierbar machen oder sperren
   const usernameEl = document.getElementById('headerUsername');
   if (usernameEl) {
     usernameEl.contentEditable = isEditing;
     if (isEditing) {
       usernameEl.focus();
+      // Optional: Cursor ans Ende setzen
       document.execCommand('selectAll', false, null);
       document.getSelection().collapseToEnd();
     }
   }
 
+  // Speichern Button sichtbar machen (falls vorhanden)
   const saveBtn = document.getElementById('saveBtn');
   if (saveBtn) saveBtn.style.display = isEditing ? 'inline-block' : 'none';
 
@@ -65,30 +77,52 @@ function toggleEditMode() {
   if (!tilesContainer) return;
 
   if (isEditing) {
-    tilesContainer.innerHTML = '';
+    // Alte Kacheln ausblenden, stattdessen 3 Beispiel-Kacheln + Plus-Kachel anzeigen
+    tilesContainer.innerHTML = ''; // Clear all
 
-    ['full', 'half', 'square'].forEach(type => {
-      const tile = document.createElement('div');
-      tile.classList.add('tile', type, 'add-tile');
-      tile.textContent = '+';
-      tile.title = `Neue ${type}-Kachel hinzufügen`;
-      tile.onclick = () => openTilePopup(type);
-      tilesContainer.appendChild(tile);
-    });
+    // 1: volle Breite (full)
+    const full = document.createElement('div');
+    full.classList.add('tile', 'full', 'add-tile');
+    full.textContent = '+';
+    full.title = 'Neue volle Breite Kachel hinzufügen';
+    full.onclick = () => openTilePopup('full');
+    tilesContainer.appendChild(full);
+
+    // 2: halbe Breite (half)
+    const half = document.createElement('div');
+    half.classList.add('tile', 'half', 'add-tile');
+    half.textContent = '+';
+    half.title = 'Neue halbe Breite Kachel hinzufügen';
+    half.onclick = () => openTilePopup('half');
+    tilesContainer.appendChild(half);
+
+    // 3: quadratisch (square)
+    const square = document.createElement('div');
+    square.classList.add('tile', 'square', 'add-tile');
+    square.textContent = '+';
+    square.title = 'Neue quadratische Kachel hinzufügen';
+    square.onclick = () => openTilePopup('square');
+    tilesContainer.appendChild(square);
 
   } else {
+    // Bearbeitungsmodus aus -> Lade gespeicherte Kacheln neu (aus Firestore oder default)
     loadSavedTiles();
   }
 
   const editBtn = document.getElementById('editModeBtn');
   if (editBtn) {
-    editBtn.textContent = isEditing ? 'Speichern' : 'Bearbeiten';
-    editBtn.style.backgroundColor = isEditing ? '#4CAF50' : '#e6735f';
-
-    if (!isEditing) saveSmartBioData();
+    if (isEditing) {
+      editBtn.textContent = 'Speichern';
+      editBtn.style.backgroundColor = '#4CAF50'; // grün
+    } else {
+      editBtn.textContent = 'Bearbeiten';
+      editBtn.style.backgroundColor = '#e6735f'; // Standardfarbe
+      saveSmartBioData();
+    }
   }
 }
-// Lädt gespeicherte Kacheln neu aus Firestore
+
+// Lädt die Kacheln aus Firestore neu (oder default)
 async function loadSavedTiles() {
   const user = auth.currentUser;
   if (!user) return;
@@ -103,7 +137,7 @@ async function loadSavedTiles() {
   }
 }
 
-// Öffnet das Popup zum Kachel-Hinzufügen
+// Öffnet das Popup zum Kachel hinzufügen mit vorgegebenem Typ
 function openTilePopup(type) {
   const popup = document.getElementById('tilePopup');
   if (!popup) return;
@@ -111,6 +145,7 @@ function openTilePopup(type) {
   popup.style.display = 'block';
   popup.dataset.type = type;
 
+  // Felder zurücksetzen
   document.getElementById('tileLinkInput').value = '';
   document.getElementById('tileTextInput').value = '';
   document.getElementById('tileImageInput').value = '';
@@ -130,6 +165,15 @@ function closeTilePopup() {
 function saveTileFromPopup() {
   const popup = document.getElementById('tilePopup');
   if (!popup) return;
+
+  // EventListener für Popup Buttons (einmal beim Laden)
+window.addEventListener('load', () => {
+  const saveBtn = document.getElementById('saveTileBtn');
+  const cancelBtn = document.getElementById('cancelTileBtn');
+
+  if (saveBtn) saveBtn.addEventListener('click', saveTileFromPopup);
+  if (cancelBtn) cancelBtn.addEventListener('click', closeTilePopup);
+});
 
   const type = popup.dataset.type;
   const link = document.getElementById('tileLinkInput').value.trim();
@@ -191,6 +235,7 @@ function saveTileFromPopup() {
 
   closeTilePopup();
 }
+
 // Theme-Wechsel Funktion
 function wechselTheme(name) {
   const link = document.getElementById('themeStylesheet');
@@ -203,6 +248,7 @@ function wechselTheme(name) {
     }
   }
 }
+
 
 // Daten laden und UI befüllen
 function loadSmartBioData(data) {
@@ -239,18 +285,21 @@ function loadSmartBioData(data) {
       tilesContainer.appendChild(tileDiv);
     });
 
-    if (isEditing && !tilesContainer.querySelector('.add-tile')) {
-      const addTileDiv = document.createElement('div');
-      addTileDiv.classList.add('tile', 'add-tile');
-      addTileDiv.textContent = '+';
-      addTileDiv.title = 'Neue Kachel hinzufügen';
-      addTileDiv.onclick = () => openTilePopup('full');
-      tilesContainer.appendChild(addTileDiv);
+    // Add "add-tile" and kachel-optionen if missing (visible nur im Bearbeitungsmodus)
+    if (isEditing) {
+      if (!tilesContainer.querySelector('.add-tile')) {
+        const addTileDiv = document.createElement('div');
+        addTileDiv.classList.add('tile', 'add-tile');
+        addTileDiv.textContent = '+';
+        addTileDiv.title = 'Neue Kachel hinzufügen';
+        addTileDiv.onclick = () => openTilePopup('full'); // Default: volle Breite
+        tilesContainer.appendChild(addTileDiv);
+      }
     }
   }
 }
 
-// Default-Daten für neue Nutzer
+// Default SmartBio-Daten für neue User
 function getDefaultSmartBio(email) {
   return {
     username: email.split('@')[0],
@@ -262,6 +311,7 @@ function getDefaultSmartBio(email) {
     ]
   };
 }
+
 // Daten speichern in Firestore
 function saveSmartBioData() {
   const user = auth.currentUser;
@@ -279,7 +329,7 @@ function saveSmartBioData() {
   tilesContainer.querySelectorAll('.tile').forEach(tile => {
     if (tile.classList.contains('add-tile') || tile.id === 'kachelOptionen') return;
     const type = tile.classList.contains('half') ? 'half' : tile.classList.contains('square') ? 'square' : 'full';
-    const content = tile.childNodes[0]?.textContent || tile.textContent || '';
+    const content = tile.childNodes[0].textContent || tile.textContent || '';
     const imgEl = tile.querySelector('img');
     const image = imgEl ? imgEl.src : null;
     tiles.push({ type, content, image });
@@ -327,6 +377,7 @@ function showToast(message, type = 'success', duration = 5000) {
     toast.addEventListener('animationend', () => toast.remove());
   }, duration);
 }
+
 // Logout-Funktion hinzufügen
 function setupLogoutButton() {
   let logoutBtn = document.getElementById('logoutBtn');
@@ -349,12 +400,14 @@ function setupLogoutButton() {
     logoutBtn.onclick = async () => {
       await auth.signOut();
       showToast('Erfolgreich ausgeloggt.', 'success');
-      window.location.reload(); // UI aktualisieren
+      // Seite neu laden, um UI zu aktualisieren
+      window.location.reload();
     };
   }
 }
 
 // --- START ---
+
 window.onload = () => {
   // Firebase Auth Status beobachten
   auth.onAuthStateChanged(async (user) => {
@@ -367,9 +420,10 @@ window.onload = () => {
       showEditButton();
       setupLogoutButton();
 
+      // Header verstecken
       if (header) header.classList.add('hidden');
 
-      // SmartBio laden
+      // Lade SmartBio Daten etc.
       try {
         const doc = await db.collection('smartbios').doc(user.uid).get();
         if (doc.exists) {
@@ -381,119 +435,133 @@ window.onload = () => {
         console.error("Fehler beim Laden der SmartBio-Daten:", error);
       }
     } else {
-      // Nicht eingeloggt
+      // Nutzer nicht eingeloggt
       document.getElementById('loginContainer').style.display = 'block';
       document.getElementById('contentContainer').style.display = 'none';
+
+      // Header anzeigen
       if (header) header.classList.remove('hidden');
+
+      // Logout-Button entfernen falls vorhanden
       const logoutBtn = document.getElementById('logoutBtn');
       if (logoutBtn) logoutBtn.remove();
     }
   });
+
   // Login-Link toggle zwischen Registrierung und Login
-  const toggleLoginLink = document.getElementById('toggleLoginLink');
-  if (toggleLoginLink) {
-    toggleLoginLink.onclick = () => {
-      const formTitle = document.getElementById('formTitle');
-      const registerBtn = document.getElementById('registerBtn');
-      const authMessage = document.getElementById('authMessage');
-      
-      // Formular zurücksetzen und Meldung entfernen
-      document.getElementById('authForm').reset();
-      if(authMessage) authMessage.textContent = '';
+const toggleLoginLink = document.getElementById('toggleLoginLink');
+if (toggleLoginLink) {
+  toggleLoginLink.onclick = () => {
+    const formTitle = document.getElementById('formTitle');
+    const registerBtn = document.getElementById('registerBtn');
+    const authMessage = document.getElementById('authMessage');
+    
+    // Formular zurücksetzen und Meldung entfernen
+    document.getElementById('authForm').reset();
+    if(authMessage) authMessage.textContent = '';
 
-      if (formTitle.textContent === 'Registrieren') {
-        formTitle.textContent = 'Einloggen';
-        registerBtn.textContent = 'Einloggen';
-      } else {
-        formTitle.textContent = 'Registrieren';
-        registerBtn.textContent = 'Registrieren & SmartBio erstellen';
-      }
-    };
+    if (formTitle.textContent === 'Registrieren') {
+      formTitle.textContent = 'Einloggen';
+      registerBtn.textContent = 'Einloggen';
+    } else {
+      formTitle.textContent = 'Registrieren';
+      registerBtn.textContent = 'Registrieren & SmartBio erstellen';
+    }
+  };
+}
+
+// Button beim scrollen einblenden/ausblenden
+
+window.addEventListener('scroll', () => {
+  const editBtn = document.getElementById('editModeBtn');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  if (!editBtn || !logoutBtn) return;
+
+  const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const scrollTop = window.scrollY;
+
+  if (scrollTop > 0) {
+    editBtn.style.opacity = '0';
+    editBtn.style.pointerEvents = 'none';
+  } else {
+    editBtn.style.opacity = '1';
+    editBtn.style.pointerEvents = 'auto';
   }
 
-  // Button beim Scrollen einblenden/ausblenden
-  window.addEventListener('scroll', () => {
-    const editBtn = document.getElementById('editModeBtn');
-    const logoutBtn = document.getElementById('logoutBtn');
-
-    if (!editBtn || !logoutBtn) return;
-
-    const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const scrollTop = window.scrollY;
-
-    if (scrollTop > 0) {
-      editBtn.style.opacity = '0';
-      editBtn.style.pointerEvents = 'none';
-    } else {
-      editBtn.style.opacity = '1';
-      editBtn.style.pointerEvents = 'auto';
-    }
-
-    if (scrollTop / scrollableHeight > 0.9) {
-      logoutBtn.style.opacity = '1';
-      logoutBtn.style.pointerEvents = 'auto';
-    } else {
-      logoutBtn.style.opacity = '0';
-      logoutBtn.style.pointerEvents = 'none';
-    }
-  });
-
-  window.addEventListener('load', () => {
-    const saveBtn = document.getElementById('saveTileBtn');
-    const cancelBtn = document.getElementById('cancelTileBtn');
-
-    if (saveBtn) saveBtn.addEventListener('click', saveTileFromPopup);
-    if (cancelBtn) cancelBtn.addEventListener('click', closeTilePopup);
-  });
-
-  // Login/Register Button je nach Modus
-  const authForm = document.getElementById('authForm');
-  if (authForm) {
-    authForm.onsubmit = async (event) => {
-      event.preventDefault();
-
-      const formTitle = document.getElementById('formTitle').textContent.trim();
-      const email = document.getElementById('emailInput').value.trim();
-      const password = document.getElementById('passwordInput').value.trim();
-
-      try {
-        if (formTitle.toLowerCase().includes("registrieren")) {
-          await auth.createUserWithEmailAndPassword(email, password);
-        } else {
-          await auth.signInWithEmailAndPassword(email, password);
-        }
-
-        // Sichtbarkeit ändern nach erfolgreichem Login
-        document.getElementById('loginContainer').style.display = 'none';
-        document.getElementById('mainContent').style.display = 'block';
-
-        // Optional: Username setzen, falls vorhanden
-        const user = auth.currentUser;
-        if (user) {
-          updateUsernameInHeader(user.displayName || user.email.split("@")[0]);
-        }
-      } catch (error) {
-        alert("Fehler: " + error.message);
-      }
-    };
+  if (scrollTop / scrollableHeight > 0.9) {
+    logoutBtn.style.opacity = '1';
+    logoutBtn.style.pointerEvents = 'auto';
+  } else {
+    logoutBtn.style.opacity = '0';
+    logoutBtn.style.pointerEvents = 'none';
   }
+});
 
-  window.addEventListener('load', () => {
+window.addEventListener('load', () => {
+  const saveBtn = document.getElementById('saveTileBtn');
+  const cancelBtn = document.getElementById('cancelTileBtn');
+
+  if (saveBtn) saveBtn.addEventListener('click', saveTileFromPopup);
+  if (cancelBtn) cancelBtn.addEventListener('click', closeTilePopup);
+});
+
+// Login/Register Button je nach Modus
+const authForm = document.getElementById('authForm');
+if (authForm) {
+  
+authForm.onsubmit = async (event) => {
+  event.preventDefault();
+
+  const formTitle = document.getElementById('formTitle').textContent.trim();
+  const email = document.getElementById('emailInput').value.trim();
+  const password = document.getElementById('passwordInput').value.trim();
+
+  try {
+    if (formTitle.toLowerCase().includes("registrieren")) {
+      await auth.createUserWithEmailAndPassword(email, password);
+    } else {
+      await auth.signInWithEmailAndPassword(email, password);
+    }
+
+    // Sichtbarkeit ändern nach erfolgreichem Login
+    document.getElementById('loginContainer').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'block';
+
+    // Optional: Username setzen, falls vorhanden
+    const user = auth.currentUser;
+    if (user) {
+      updateUsernameInHeader(user.displayName || user.email.split("@")[0]);
+    }
+  } catch (error) {
+    alert("Fehler: " + error.message);
+  }
+};
+
+}
+}
+window.addEventListener('load', () => {
   const tilesContainer = document.getElementById('tilesContainer');
 
   if (tilesContainer) {
     new Sortable(tilesContainer, {
       animation: 150,
       ghostClass: 'drag-ghost',
-      direction: 'horizontal', // Hier ergänzt für nebeneinander Verschieben
-      swapThreshold: 0.65,      // Optional für bessere Swap-Erkennung
-      fallbackOnBody: true,
-      scroll: true,
-      onEnd: function (evt) {
+      onEnd: function (/**Event*/evt) {
         console.log(`Kachel verschoben von ${evt.oldIndex} nach ${evt.newIndex}`);
-        // Optional: Hier neue Reihenfolge speichern (z.B. Firestore)
+        // Optional: Speicher neue Reihenfolge, z.B. in localStorage oder Firestore
       }
     });
   }
+  
+  const saveBtn = document.getElementById('saveTileBtn');
+  const cancelBtn = document.getElementById('cancelTileBtn');
+
+  if (saveBtn) {
+    saveBtn.addEventListener('click', saveTileFromPopup);
+  }
+
+  if (cancelBtn) {
+    cancelBtn.addEventListener('click', closeTilePopup);
+  }
 });
-};
