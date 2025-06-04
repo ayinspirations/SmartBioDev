@@ -565,12 +565,16 @@ document.addEventListener('DOMContentLoaded', function() {
   // Popup-Buttons Event-Listener (wie bisher)
   const saveBtn = document.getElementById('saveTileBtn');
   const cancelBtn = document.getElementById('cancelTileBtn');
-  if (saveBtn) saveBtn.addEventListener('click', () => {
-    saveTileToGrid(grid); // Popup-Daten als neue Kachel in Grid einfügen
-  });
-  if (cancelBtn) cancelBtn.addEventListener('click', () => {
-    closeTilePopup();
-  });
+
+  if (saveBtn) {
+    saveBtn.addEventListener('click', () => {
+      // popup speichern
+      saveTileToGrid(grid);  // grid muss hier aus deinem GridStack-Kontext kommen
+    });
+  }
+  if (cancelBtn) {
+    cancelBtn.addEventListener('click', closeTilePopup);
+  }
 
   function saveTileToGrid(grid) {
   const popup = document.getElementById('tilePopup');
