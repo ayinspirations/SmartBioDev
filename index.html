@@ -111,6 +111,52 @@
       color: var(--primary);
     }
   </style>
+
+<script>
+  function showLoginForm() {
+    document.getElementById('formTitle').textContent = 'Einloggen';
+    document.getElementById('registerBtn').textContent = 'Einloggen';
+    document.getElementById('registerBtn').onclick = loginUser;
+    document.getElementById('toggleLoginText').innerHTML =
+      'Noch keinen Account? <span id="toggleLoginLink" style="color: var(--cta); cursor:pointer;">Hier registrieren</span>';
+    document.getElementById('passwordInput').setAttribute('autocomplete', 'current-password');
+  }
+
+  function showRegisterForm() {
+    document.getElementById('formTitle').textContent = 'Registrieren';
+    document.getElementById('registerBtn').textContent = 'Registrieren & SmartBio erstellen';
+    document.getElementById('registerBtn').onclick = registerUser;
+    document.getElementById('toggleLoginText').innerHTML =
+      'Schon registriert? <span id="toggleLoginLink" style="color: var(--cta); cursor:pointer;">Hier einloggen</span>';
+    document.getElementById('passwordInput').setAttribute('autocomplete', 'new-password');
+  }
+
+  document.addEventListener('click', function (e) {
+    if (e.target.id === 'toggleLoginLink') {
+      const title = document.getElementById('formTitle').textContent;
+      if (title === 'Registrieren') {
+        showLoginForm();
+      } else {
+        showRegisterForm();
+      }
+    }
+  });
+
+  window.addEventListener('DOMContentLoaded', () => {
+    showLoginForm();
+  });
+
+  function loginUser() {
+    console.log("Login ausführen...");
+    // Hier deine echte Firebase Login-Funktion ergänzen
+  }
+
+  function registerUser() {
+    console.log("Registrierung ausführen...");
+    // Hier deine echte Firebase Registrierung ergänzen
+  }
+</script>
+  
 </head>
 <!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
