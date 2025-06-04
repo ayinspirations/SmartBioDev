@@ -540,28 +540,96 @@ authForm.onsubmit = async (event) => {
 
 }
 }
-window.addEventListener('load', () => {
-  const tilesContainer = document.getElementById('tilesContainer');
+document.addEventListener('DOMContentLoaded', function() {
+  const grid = GridStack.init({
+    float: true,          // Freies Verschieben über Reihen/Gitter hinweg
+    resizable: { handles: 'all' }, // Größenänderung an allen Seiten
+    animate: true,
+    cellHeight: 80,
+    margin: 8,
+  });
 
-  if (tilesContainer) {
-    new Sortable(tilesContainer, {
-      animation: 150,
-      ghostClass: 'drag-ghost',
-      onEnd: function (/**Event*/evt) {
-        console.log(`Kachel verschoben von ${evt.oldIndex} nach ${evt.newIndex}`);
-        // Optional: Speicher neue Reihenfolge, z.B. in localStorage oder Firestore
-      }
-    });
-  }
-  
+  // Event wenn Kacheln verschoben oder in Größe geändert wurden
+  grid.on('change', function(event, items) {
+    console.log('GridStack Layout geändert:', items);
+    saveGridData(items); // Deine Funktion zum Speichern der Layout-Daten
+  });
+
+  // Optional: Kacheln laden, z.B. aus Firestore
+  loadGridData().then(data => {
+    if (data) {
+      grid.load(data);
+    }
+  });
+
+  // Popup-Buttons Event-Listener (wie bisher)
   const saveBtn = document.getElementById('saveTileBtn');
   const cancelBtn = document.getElementById('cancelTileBtn');
+  if (saveBtn) saveBtn.addEventListener('click', () => {
+    saveTileToGrid(grid); // Popup-Daten als neue Kachel in Grid einfügen
+  });
+  if (cancelBtn) cancelBtn.addEventListener('click', () => {
+    closeTilePopup();
+  });
 
-  if (saveBtn) {
-    saveBtn.addEventListener('click', saveTileFromPopup);
+  function saveTileToGrid(grid) {
+  const popup = document.getElementById('tilePopup');
+  if (!popup) return;
+
+  const type = popup.dataset.type;
+  const link = document.getElementById('tileLinkInput').value.trim();
+  const text = document.getElementById('tileTextInput').value.trim();
+  const image = document.getElementById('tileImageInput').value.trim();
+
+  if (!link && !text && !image) {
+    alert('Bitte mindestens einen Link, Text oder Bild-URL eingeben!');
+    return;
   }
 
-  if (cancelBtn) {
-    cancelBtn.addEventListener('click', closeTilePopup);
+  const el = document.createElement('div');
+  el.classList.add('grid-stack-item');
+
+  // Setze Größe je nach Typ
+  if (type === 'full') {
+    el.setAttribute('gs-w', 12);
+    el.setAttribute('gs-h', 2);
+  } else if (type === 'half') {
+    el.setAttribute('gs-w', 6);
+    el.setAttribute('gs-h', 2);
+  } else if (type === 'square') {
+    el.setAttribute('gs-w', 6);
+    el.setAttribute('gs-h', 6);
+  } else {
+    el.setAttribute('gs-w', 6);
+    el.setAttribute('gs-h', 2);
   }
+
+  const content = document.createElement('div');
+  content.classList.add('grid-stack-item-content');
+
+  if (link) {
+    const a = document.createElement('a');
+    a.href = link;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.textContent = text || link;
+    content.appendChild(a);
+  } else if (text) {
+    content.textContent = text;
+  }
+
+  if (image) {
+    const img = document.createElement('img');
+    img.src = image;
+    img.alt = text || '';
+    content.appendChild(img);
+  }
+
+  el.appendChild(content);
+
+  grid.addWidget(el);
+  closeTilePopup();
+}
+
 });
+
