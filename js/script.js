@@ -272,7 +272,12 @@ function saveSmartBioData() {
 
   const profileImage = document.querySelector('.profile-img').src;
   const bioText = document.getElementById('bioText').textContent;
-  const theme = document.getElementById('themeDropdown').value;
+  const themeDropdown = document.getElementById('themeDropdown');
+if (themeDropdown) {
+  themeDropdown.addEventListener('change', (event) => {
+    wechselTheme(event.target.value);
+  });
+}
 
   const tilesContainer = document.getElementById('tilesContainer');
   const tiles = [];
