@@ -443,14 +443,6 @@ window.onload = () => {
     }
   });
 
-  window.addEventListener('load', () => {
-    const saveBtn = document.getElementById('saveTileBtn');
-    const cancelBtn = document.getElementById('cancelTileBtn');
-
-    if (saveBtn) saveBtn.addEventListener('click', saveTileFromPopup);
-    if (cancelBtn) cancelBtn.addEventListener('click', closeTilePopup);
-  });
-
   // Login/Register Button je nach Modus
   const authForm = document.getElementById('authForm');
   if (authForm) {
@@ -497,6 +489,12 @@ window.onload = () => {
       onEnd: function (evt) {
         console.log(`Kachel verschoben von ${evt.oldIndex} nach ${evt.newIndex}`);
         // Optional: Hier neue Reihenfolge speichern (z.B. Firestore)
+
+        const saveBtn = document.getElementById('saveTileBtn');
+    const cancelBtn = document.getElementById('cancelTileBtn');
+
+    if (saveBtn) saveBtn.addEventListener('click', saveTileFromPopup);
+    if (cancelBtn) cancelBtn.addEventListener('click', closeTilePopup);
       }
     });
   }
